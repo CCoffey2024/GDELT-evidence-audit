@@ -10,7 +10,7 @@ On Map, use the geographic precision colors to identify country, administrative-
 
 ## Review a claim
 
-Open the article, record its availability, and identify the passage describing the action. Compare the action, each actor, the date, and the action location separately. Use **Unclear** when the available text cannot resolve a field. Cite separately sourced evidence for an independent judgment about whether the occurrence itself is supported. Several outlets may carry one wire report.
+Read the cached Article preview first. Selecting an event renders plain text bundled in the dashboard. The timestamp and metadata field identify where the headline or description came from. Some publishers supply only a headline or a generic description. Use the original link when you need article-level evidence. Record its availability, and identify the passage describing the action. Compare the action, each actor, the date, and the action location separately. Use **Unclear** when the available text cannot resolve a field. Cite separately sourced evidence for an independent judgment about whether the occurrence itself is supported. Several outlets may carry one wire report.
 
 ## Share work
 

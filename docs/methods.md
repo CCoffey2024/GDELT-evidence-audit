@@ -21,3 +21,9 @@ The dashboard displays every rule and its triggering evidence. A record can trig
 ## Reporting accuracy
 
 Field agreement is supported divided by supported plus contradicted for that field. Include the numerator, denominator, and counts of unclear, inapplicable, and unassessed fields. Self-selected reviews can overrepresent unusual cases. Measuring missed incidents requires an independently assembled incident list and a separate matching exercise.
+
+## Article previews
+
+Previews match the exact event source URL. Multiple event IDs can share the same preview. The archive collector looks for publisher headlines and descriptions in the GDELT Global Embedded Metadata Graph around the event batch and preceding quarter-hour. Descriptions are clipped at 280 characters. The bundled snapshot also includes publisher metadata captured during preparation. Each card identifies its source and capture time. Rebuilding from the public archives alone can yield different coverage. Missing metadata leaves an explicit gap. Preview text supplies context for reviewing a coded claim.
+
+[Global Embedded Metadata Graph documentation](https://blog.gdeltproject.org/announcing-the-global-embedded-metadata-graph/)

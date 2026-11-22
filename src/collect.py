@@ -8,7 +8,7 @@ import io
 import json
 import os
 from pathlib import Path
-import statistics
+from article_previews import enrich
 import time
 from urllib.request import Request, urlopen
 import zipfile
@@ -64,6 +64,7 @@ def main():
     data = dict(start=str(start),end=str(end),seed=SEED,collected=dt.datetime.now(dt.timezone.utc).isoformat(),batches=batches)
     if not any(b['sample'] for b in batches):
         raise SystemExit('No event data retrieved. Existing dashboard preserved.')
+    data['previews'] = enrich(batches)
     template = (ROOT/'template.html').read_text(encoding='utf-8')
     result = template.replace('/*DATASET*/null',json.dumps(data,separators=(',',':')).replace('<','\\u003c'))
     tmp = ROOT.parent/'public'/'index.tmp'
