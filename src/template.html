@@ -4,7 +4,7 @@
 
 
 #atlas{height:clamp(360px,61vh,700px);background:#d8e9ee;border:1px solid #a5bbc4;border-radius:9px;z-index:0} #placeList{scroll-margin:15px}</style>
-<header><div class="masthead"><b>BlueLens Analytics</b><strong>GDELT Evidence Audit</strong></div><span>Research methods &nbsp;/&nbsp; Data provenance</span></header><nav id="nav"></nav><main><div id="message" role="status"></div><details id="ranges" class="panel"></details><p id="activeRange" class="sub"></p><section id="fullResults" class="panel" hidden></section><div id="app"></div></main>
+<header><div class="masthead"><b>BlueLens Analytics</b><strong>GDELT Evidence Audit</strong></div><span>Research methods &nbsp;/&nbsp; Data provenance</span></header><nav id="nav"></nav><main><div id="message" role="status"></div><details id="ranges" class="panel" open></details><p id="activeRange" class="sub"></p><section id="fullResults" class="panel" hidden></section><div id="app"></div></main>
 <script>/* Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: Leaflet
 Upstream-Contact: https://github.com/Leaflet/Leaflet/issues
@@ -472,7 +472,7 @@ async function collectNew(){
 }
 const yesterday=isoDay(Date.now()-86400000);
  for(const id of ['downloadStart','downloadEnd']){$('#'+id).min='2015-02-19';$('#'+id).max=yesterday}
- $('#downloadEnd').value=yesterday;$('#downloadStart').value=yesterday;
+ $('#downloadEnd').value=yesterday;$('#downloadStart').value=isoDay(Date.parse(yesterday)-89*86400000);
  inputsFor(loaded);estimate();
 $('#activeRange').textContent=windowText+' · '+records.length.toLocaleString()+' records';
 $('#rangeApply').onclick=applyRange;$('#downloadStart').oninput=$('#downloadEnd').oninput=estimate;
