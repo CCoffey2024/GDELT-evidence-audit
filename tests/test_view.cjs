@@ -74,4 +74,22 @@ async function testDownloadUI(){
  assert.equal(nodes['#rangeFetch'].disabled,false);
  console.log('Validated download limit, queued, in-progress, ready, open and retry states.');
 }
-testDownloadUI().catch(e=>{console.error(e);process.exitCode=1});
+async function testFullUI(){
+ const sample=run("sourceSnapshot.batches[0]");
+ const stamp=sample.stamp;
+ context.sample=sample;
+ run("collectorBase=async()=>'';api=async path=>{if(path==='ranges')return {id:'full'};if(path==='ranges/full')return {state:'ready',done:96,total:96,rows:1248,gaps:0,counts:[1248,96,96,0,0]};if(path.endsWith('manifest'))return [[sample.stamp,12,0]];if(path.includes('/previews/'))return {state:'complete',previews:{}};return sample}");
+ await run('collectFull()');
+ assert.equal(nodes['#fullResults'].hidden,false);
+ assert.match(nodes['#fullResults'].innerHTML,/1,248/);
+ assert.equal(nodes['#allEvents'].href,'/api/ranges/full/events.tsv');
+ assert.equal(run('loaded.full'),true);
+ assert.equal(run('loaded.batches[0].stamp'),stamp);
+ assert.match(nodes['#rangeState'].textContent,/Ready to analyze/);
+ nodes['#rangeRestore'].onclick();
+ assert.equal(nodes['#fullResults'].hidden,true);
+ console.log('Verified full-range totals, export link, archive detail and restore.');
+}
+
+testDownloadUI().then(testFullUI).catch(e=>{console.error(e);process.exitCode=1});
+

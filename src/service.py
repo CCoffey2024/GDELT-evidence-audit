@@ -156,3 +156,93 @@ def get_job(key, part=None):
         if part not in job:
             return jsonify(error="Result pending."), 409
         return jsonify(job[part])
+
+
+# Full ranges use a separate disk-backed format from the historical sampler.
+from flask import Response
+from full_range import collect_all, export_rows, read_batch
+
+FULL_CACHE = CACHE.parent / "full-ranges-v1"
+FULL_CACHE.mkdir(parents=True, exist_ok=True)
+full_jobs = {}
+
+
+@app.post("/api/ranges")
+def submit_full():
+    data = request.get_json(silent=True)
+    try:
+        if not isinstance(data, dict):
+            raise ValueError("Send a JSON date range.")
+        first, last = parse_dates(data.get("start"), data.get("end"))
+    except (TypeError, ValueError) as exc:
+        return jsonify(error=str(exc)), 400
+    key = f"{first}_{last}"
+    with lock:
+        current = full_jobs.get(key)
+        if current and (current["state"] not in ("failed","ready") or
+                        (current["state"] == "ready" and not current.get("gaps"))):
+            return jsonify(id=key), 202
+        if sum(j["state"] in ("queued","collecting","screening") for j in full_jobs.values()) >= 2:
+            return jsonify(error="Two full ranges are already in progress. Retry shortly."), 429
+        # Retain recent ranges; never evict an active collection.
+        files = sorted(FULL_CACHE.glob("*.sqlite"), key=lambda p:p.stat().st_mtime, reverse=True)
+        for old in files[2:]:
+            if old.stem != key and full_jobs.get(old.stem,{}).get("state") not in ("queued","collecting","screening"):
+                old.unlink(missing_ok=True)
+                full_jobs.pop(old.stem,None)
+        job = dict(state="queued", done=0, total=((last-first).days+1)*96, rows=0)
+        full_jobs[key] = job
+        worker.submit(collect_all, job, first, last, FULL_CACHE / (key+".sqlite"), update)
+    return jsonify(id=key), 202
+
+
+@app.get("/api/ranges/<key>")
+@app.get("/api/ranges/<key>/<part>")
+def full_result(key, part=None):
+    with lock:
+        job = full_jobs.get(key)
+        if job is None:
+            return jsonify(error="Submit this range again to resume collection."), 404
+        if part is None:
+            return jsonify({k:v for k,v in job.items() if k not in ("slots","finished")})
+        if job["state"] != "ready":
+            return jsonify(error="Collection is in progress."), 409
+        if part == "manifest":
+            return jsonify(job["slots"])
+    path = FULL_CACHE / (key+".sqlite")
+    if part == "events.tsv":
+        return Response(export_rows(path), mimetype="text/tab-separated-values",
+                        headers={"Content-Disposition":f'attachment; filename="gdelt-events-{key}.tsv"'})
+    batch = read_batch(path, part)
+    if batch is None:
+        abort(404)
+    return jsonify(batch)
+
+# Enrich only the archive an analyst opens. Large ranges can contain thousands.
+archive_previews = {}
+
+
+@app.get("/api/ranges/<key>/previews/<stamp>")
+def full_previews(key, stamp):
+    with lock:
+        if full_jobs.get(key, {}).get("state") != "ready":
+            return jsonify(error="Range is unavailable."), 404
+        future = archive_previews.get(stamp)
+        if future is None:
+            if sum(not f.done() for f in archive_previews.values()) >= 2:
+                return jsonify(state="busy")
+            batch = read_batch(FULL_CACHE / (key+".sqlite"), stamp)
+            if batch is None:
+                abort(404)
+            for old in list(archive_previews):
+                if len(archive_previews) < 6:
+                    break
+                if archive_previews[old].done():
+                    del archive_previews[old]
+            future = archive_previews[stamp] = preview_worker.submit(enrich, [batch])
+        if not future.done():
+            return jsonify(state="collecting")
+        if future.exception():
+            del archive_previews[stamp]
+            return jsonify(state="unavailable")
+        return jsonify(state="complete", previews=future.result())

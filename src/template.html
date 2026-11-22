@@ -4,7 +4,7 @@
 
 
 #atlas{height:clamp(360px,61vh,700px);background:#d8e9ee;border:1px solid #a5bbc4;border-radius:9px;z-index:0} #placeList{scroll-margin:15px}</style>
-<header><div class="masthead"><b>BlueLens Analytics</b><strong>GDELT Evidence Audit</strong></div><span>Research methods &nbsp;/&nbsp; Data provenance</span></header><nav id="nav"></nav><main><div id="message" role="status"></div><details id="ranges" class="panel"></details><p id="activeRange" class="sub"></p><div id="app"></div></main>
+<header><div class="masthead"><b>BlueLens Analytics</b><strong>GDELT Evidence Audit</strong></div><span>Research methods &nbsp;/&nbsp; Data provenance</span></header><nav id="nav"></nav><main><div id="message" role="status"></div><details id="ranges" class="panel"></details><p id="activeRange" class="sub"></p><section id="fullResults" class="panel" hidden></section><div id="app"></div></main>
 <script>/* Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: Leaflet
 Upstream-Contact: https://github.com/Leaflet/Leaflet/issues
@@ -182,7 +182,7 @@ function detail(x){
 }
 function methods(){
  const err=(b,k)=>b[k].error?'Unavailable':b[k].rows.toLocaleString();
- app.innerHTML='<h1>Sampling &amp; provenance</h1><p class="sub">'+windowText+'</p><section class="panel"><h2>How the sample was drawn</h2><p>Each UTC day contributes one of its 96 quarter-hour export batches. The first SHA-256 digest selects a slot from the seed and date, modulo 96. Within that slot, the 12 lowest hashes of seed, timestamp and event ID are retained (all rows if fewer than 12). The seed is <b>'+esc(D.seed)+'</b>. The collector preserves failures without substituting another slot.</p><p>The sampling window uses archive time. A story indexed today may describe an event years earlier. Each day has similar sample weight even when news volume differs. Within-day coverage, the restricted mention window, source availability and analyst selection all limit inference.</p><p>Open the source and identify who did what to whom, where and when. Score extraction against the article. Separately assess occurrence using independent reporting or primary evidence and record the citation. Several outlets carrying the same wire story count as one reporting chain.</p><p>To examine missed incidents, start with an independently assembled incident list and search GDELT for each one. This record-first audit cannot measure recall. Archive hashes identify the compressed bytes retrieved. They do not authenticate the publishers’ claims.</p><p>'+link('https://www.gdeltproject.org/data.html','GDELT raw data and documentation')+' · '+link('https://data.gdeltproject.org/documentation/GDELT-Event_Codebook-V2.0.pdf','Event and Mention codebook')+' · '+link('https://www.gdeltproject.org/data/lookups/CAMEO.eventcodes.txt','CAMEO labels')+'</p></section><section class="panel"><div class="row"><h2>Archive ledger</h2><button id="manifest">Export ledger</button></div><div class="scroll"><table><tr><th>Batch (UTC)</th><th>Raw events</th><th>Sampled</th><th>Raw mentions</th><th>Linked mentions</th></tr>'+D.batches.map(b=>'<tr><td>'+esc(b.stamp)+'</td><td>'+link(b.events.url,err(b,'events'))+'</td><td>'+b.sample.length+'</td><td>'+link(b.mentions.url,err(b,'mentions'))+'</td><td>'+b.sample.reduce((n,x)=>n+x.mentions.length,0)+'</td></tr>').join('')+'</table></div></section>';
+ app.innerHTML='<h1>Sampling &amp; provenance</h1><p class="sub">'+windowText+'</p><section class="panel">'+(D.full?'<h2>Complete event archive</h2><p>All rows from this quarter-hour event export are included. Mentions are matched by event ID in the same quarter-hour.</p>':'<h2>How the sample was drawn</h2><p>Each UTC day contributes one of its 96 quarter-hour export batches. The first SHA-256 digest selects a slot from the seed and date, modulo 96. Within that slot, the 12 lowest hashes of seed, timestamp and event ID are retained (all rows if fewer than 12). The seed is <b>'+esc(D.seed)+'</b>. The collector preserves failures without substituting another slot.</p><p>The sampling window uses archive time. A story indexed today may describe an event years earlier. Each day has similar sample weight even when news volume differs. Within-day coverage, the restricted mention window, source availability and analyst selection all limit inference.</p>')+'<p>Open the source and identify who did what to whom, where and when. Score extraction against the article. Separately assess occurrence using independent reporting or primary evidence and record the citation. Several outlets carrying the same wire story count as one reporting chain.</p><p>To examine missed incidents, start with an independently assembled incident list and search GDELT for each one. This record-first audit cannot measure recall. Archive hashes identify the compressed bytes retrieved. They do not authenticate the publishers’ claims.</p><p>'+link('https://www.gdeltproject.org/data.html','GDELT raw data and documentation')+' · '+link('https://data.gdeltproject.org/documentation/GDELT-Event_Codebook-V2.0.pdf','Event and Mention codebook')+' · '+link('https://www.gdeltproject.org/data/lookups/CAMEO.eventcodes.txt','CAMEO labels')+'</p></section><section class="panel"><div class="row"><h2>Archive ledger</h2><button id="manifest">Export ledger</button></div><div class="scroll"><table><tr><th>Batch (UTC)</th><th>Raw events</th><th>Included</th><th>Raw mentions</th><th>Linked mentions</th></tr>'+D.batches.map(b=>'<tr><td>'+esc(b.stamp)+'</td><td>'+link(b.events.url,err(b,'events'))+'</td><td>'+b.sample.length+'</td><td>'+link(b.mentions.url,err(b,'mentions'))+'</td><td>'+b.sample.reduce((n,x)=>n+x.mentions.length,0)+'</td></tr>').join('')+'</table></div></section>';
  $('#manifest').onclick=()=>download({start:D.start,end:D.end,seed:D.seed,collected:D.collected,codedEventBounds:eventBounds,batches:D.batches.map(({sample,...b})=>({...b,selectedIds:sample.map(x=>x.raw[0])}))},'gdelt-archive-ledger.json');
 }
 // Batch screen v2. Rules operate only on the loaded archive snapshot.
@@ -263,7 +263,7 @@ function batchView(){
  const count=k=>records.filter(x=>passes(x.id,k)).length;
  const drill=(k,title,extra='')=>'<button class="card" data-filter="'+esc(k)+'"><strong>'+count(k).toLocaleString()+'</strong>'+esc(title)+extra+'</button>';
  const n=count('any');
- app.innerHTML='<h1>Batch evidence screen</h1><p class="sub">GDELT archive sample · '+windowText+' · '+records.length.toLocaleString()+' records scanned</p><div class="cards">'+drill('','Total records')+drill('any','With any flag')+drill('Redundancy','Redundancy indicators')+drill('Spatial','Spatial limitations')+drill('Extraction','Extraction indicators')+'</div><div class="toolbar"><button id="csv">Export batch CSV</button><button id="printBatch">Print batch brief</button></div><p>'+n+' records triggered one or more checks. Categories overlap. These rules inspect archive metadata and URL text. Article content and geographic boundaries require separate verification.</p><section class="panel"><h2>Screening results by rule</h2><div class="scroll"><table><thead><tr><th>Area</th><th>Check</th><th>Records</th><th>What triggered the check</th></tr></thead><tbody>'+Object.entries(rulebook).map(([k,[group,title,desc]])=>'<tr><td>'+group+'</td><th>'+title+'</th><td><button data-filter="'+k+'">'+count(k)+'</button></td><td>'+desc+'</td></tr>').join('')+'</tbody></table></div></section>';
+ app.innerHTML='<h1>Batch evidence screen</h1><p class="sub">'+(D.full?'Selected archive':'GDELT archive sample')+' · '+windowText+' · '+records.length.toLocaleString()+' records scanned</p><div class="cards">'+drill('','Total records')+drill('any','With any flag')+drill('Redundancy','Redundancy indicators')+drill('Spatial','Spatial limitations')+drill('Extraction','Extraction indicators')+'</div><div class="toolbar"><button id="csv">Export batch CSV</button><button id="printBatch">Print batch brief</button></div><p>'+n+' records triggered one or more checks. Categories overlap. These rules inspect archive metadata and URL text. Article content and geographic boundaries require separate verification.</p><section class="panel"><h2>Screening results by rule</h2><div class="scroll"><table><thead><tr><th>Area</th><th>Check</th><th>Records</th><th>What triggered the check</th></tr></thead><tbody>'+Object.entries(rulebook).map(([k,[group,title,desc]])=>'<tr><td>'+group+'</td><th>'+title+'</th><td><button data-filter="'+k+'">'+count(k)+'</button></td><td>'+desc+'</td></tr>').join('')+'</tbody></table></div></section>';
  const priority=records.filter(x=>hits(x.id).length).sort((a,b)=>rankFlags(b.id)-rankFlags(a.id)||a.id.localeCompare(b.id)).slice(0,5);
  const short=document.createElement('section');short.className='panel';short.innerHTML='<h2>Start with these records</h2><p>Ordered by rule weight and then event ID. A repeated coded claim or invalid coordinate receives the highest individual weight.</p>'+priority.map(x=>'<p><button data-id="'+esc(x.id)+'">'+esc(x.id)+'</button> <b>'+esc(label(x.raw[26]))+'</b> · '+esc(x.raw[52]||'Location unspecified')+'<br>'+esc(hits(x.id).map(f=>rulebook[f.rule][1]).join(' · '))+'</p>').join('');app.append(short);
  short.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>openQueue('',b.dataset.id));
@@ -337,14 +337,14 @@ const isoDay=t=>new Date(t).toISOString().slice(0,10);
 const lastDay=d=>isoDay(Date.parse(d.end)-86400000);
 const sourceSnapshot=D;
 let loaded=D, loadedFlags=flags, eventBounds=['',''];
-let requestEpoch=0,pendingSample=null;
+let requestEpoch=0,pendingSample=null,rangeSelection=null,archiveRequest=0;
 const panel=$('#ranges');
 panel.innerHTML=`<summary>Date ranges</summary>
 <section class="date-section"><h2>Download GDELT records</h2>
 <p><strong>90 days maximum per download.</strong> Choose completed UTC days from February 19, 2015 onward. Both dates are included.</p>
 <div class="controls"><label>Download from<input id="downloadStart" type="date" required></label><label>Download through<input id="downloadEnd" type="date" required></label></div>
-<p id="rangeScope" aria-live="polite"></p><button id="rangeFetch" class="primary">Download records</button>
-<div id="downloadStatus" hidden><strong id="rangeState" role="status"></strong><progress id="downloadBar" aria-label="Archive days processed"></progress><p id="downloadDetail"></p><button hidden id="useRange" class="primary">View downloaded records</button></div></section>
+<label>Records to collect<select id="collectionMode"><option value="all">All available event records</option><option value="sample">Quick sample (up to 12 records per day)</option></select></label><p id="rangeScope" aria-live="polite"></p><button id="rangeFetch" class="primary">Download records</button>
+<div id="downloadStatus" hidden><strong id="rangeState" role="status"></strong><progress id="downloadBar" aria-label="Collection progress"></progress><p id="downloadDetail"></p><button hidden id="useRange" class="primary">View downloaded records</button></div></section>
 <section class="date-section"><h2>Filter the records on screen</h2><p id="filterScope"></p>
 <div class="controls"><label>Archive date from<input id="rangeStart" type="date" required></label><label>Archive date through<input id="rangeEnd" type="date" required></label><label>Event date from (optional)<input id="eventStart" type="date"></label><label>Event date through (optional)<input id="eventEnd" type="date"></label></div>
 <div class="toolbar"><button id="rangeApply">Apply date filters</button><button id="rangeClear">Clear filters</button><button id="rangeRestore">Return to original dataset</button></div></section>`;
@@ -371,10 +371,10 @@ function inputsFor(data){
 }
 function estimate(){
  const {days,message}=downloadDates();
- $('#rangeScope').textContent=message||days+' day(s) selected · up to '+(12*days).toLocaleString()+' sampled records.';
+ $('#rangeScope').textContent=message||($('#collectionMode').value==='sample'?days+' day(s) · up to '+(12*days)+' sampled records.':(days*96).toLocaleString()+' quarter-hour archives · all available event rows.');
  $('#rangeFetch').disabled=downloading||Boolean(message);
  $('#filterScope').textContent='Available archive dates: '+loaded.start+' through '+lastDay(loaded)+' UTC.';
- $('#rangeRestore').hidden=loaded===sourceSnapshot;
+ $('#rangeRestore').hidden=loaded===sourceSnapshot&&!rangeSelection;
  for(const id of ['rangeStart','rangeEnd']){$('#'+id).min=loaded.start;$('#'+id).max=lastDay(loaded)}
 }
 function viewRange(source,start,end,ef,et){
@@ -389,7 +389,7 @@ function applyRange(){
  if(ef&&et&&ef>et){tell('Coded event end must follow its start.');return}
  if(!safeLeave())return;
  D=viewRange(loaded,s,e,ef,et);eventBounds=[ef,et];records=flatten(D);byid=new Map(records.map(x=>[x.id,x]));flags=scanRows(records);
- windowText=s+' through '+e+' UTC'+(ef||et?' · Coded event dates '+(ef||'earliest')+' through '+(et||'latest'):'');
+ windowText=(loaded.full?slotLabel(loaded.batches[0].stamp)+' UTC archive':s+' through '+e+' UTC')+(ef||et?' · Coded event dates '+(ef||'earliest')+' through '+(et||'latest'):'');
  const missed=D.batches.filter(b=>b.events.error||b.mentions.error).map(b=>b.day);
  $('#activeRange').textContent=windowText+' · '+records.length.toLocaleString()+' records · '+D.batches.filter(b=>!b.events.error).length+'/'+D.batches.length+' event archives loaded'+(missed.length?' · Archive gaps: '+missed.join(', '):'');
  q=country=root=month=status=batchFilter=mapFilter='';selected=null;page=0;msg.textContent='';show();estimate();
@@ -439,6 +439,7 @@ async function collectNew(){
     const data=await api('jobs/'+job.id+'/result');if(epoch!==requestEpoch)return;
     data.previews={...(sourceSnapshot.previews||{})};pendingSample=data;delivered=true;
     if(!dirty)switchSample(data);
+    rangeSelection=null;$('#fullResults').hidden=true;
     $('#useRange').hidden=loaded===data;
    }
    if(delivered){
@@ -471,14 +472,85 @@ async function collectNew(){
 }
 const yesterday=isoDay(Date.now()-86400000);
  for(const id of ['downloadStart','downloadEnd']){$('#'+id).min='2015-02-19';$('#'+id).max=yesterday}
- $('#downloadEnd').value=yesterday;$('#downloadStart').value=isoDay(Date.parse(yesterday)-6*86400000);
+ $('#downloadEnd').value=yesterday;$('#downloadStart').value=yesterday;
  inputsFor(loaded);estimate();
 $('#activeRange').textContent=windowText+' · '+records.length.toLocaleString()+' records';
 $('#rangeApply').onclick=applyRange;$('#downloadStart').oninput=$('#downloadEnd').oninput=estimate;
 $('#rangeClear').onclick=()=>switchSample(loaded);
-$('#rangeRestore').onclick=()=>{if(switchSample(sourceSnapshot)){requestEpoch++;pendingSample=null;downloading=false;estimate();$('#downloadStatus').hidden=true;$('#useRange').hidden=true}};
-$('#rangeFetch').onclick=collectNew;
+$('#rangeRestore').onclick=()=>{if(switchSample(sourceSnapshot)){requestEpoch++;rangeSelection=null;$('#fullResults').hidden=true;pendingSample=null;downloading=false;estimate();$('#downloadStatus').hidden=true;$('#useRange').hidden=true}};
+
+function slotLabel(stamp){
+ return stamp.slice(0,4)+'-'+stamp.slice(4,6)+'-'+stamp.slice(6,8)+' '+stamp.slice(8,10)+':'+stamp.slice(10,12);
+}
+async function archivePreviews(range,stamp,data){
+ try{
+  while(rangeSelection===range&&loaded===data){
+   const result=await api('ranges/'+range.id+'/previews/'+stamp);
+   if(rangeSelection!==range||loaded!==data)return;
+   if(result.state==='complete'){
+    Object.assign(data.previews,result.previews);
+    const card=$('.article-preview');
+    if(card&&selected&&byid.has(selected))card.outerHTML=articlePreview(byid.get(selected).raw[60]);
+    return;
+   }
+   if(result.state==='unavailable')return;
+   await new Promise(resolve=>setTimeout(resolve,5000));
+  }
+ }catch{/* Archived previews are optional. Screening remains available. */}
+}
+async function openArchive(){
+ const range=rangeSelection, stamp=$('#fullSlot').value, serial=++archiveRequest;
+ if(!range||!stamp)return;
+ const note=$('#archiveNote');
+ try{
+  note.textContent='Opening archive…';
+  const batch=await api('ranges/'+range.id+'/'+stamp);
+  if(range!==rangeSelection||serial!==archiveRequest)return;
+  const data={full:true,start:batch.day,end:isoDay(Date.parse(batch.day)+86400000),seed:'full-export',batches:[batch],previews:{...(sourceSnapshot.previews||{})}};
+  if(!switchSample(data)){note.textContent='Save your edits, then choose Open archive.';return}
+  note.textContent='Showing '+slotLabel(stamp)+' UTC below.';
+  archivePreviews(range,stamp,data);
+ }catch(e){if(range===rangeSelection&&serial===archiveRequest)note.textContent=e.message+' Choose Open archive to retry.'}
+}
+async function collectFull(){
+ const {start,end,days,message}=downloadDates();
+ if(message||downloading)return;
+ const epoch=++requestEpoch;
+ downloading=true;estimate();pendingSample=null;$('#useRange').hidden=true;
+ setProgress('Connecting to GDELT collector…',start+' through '+end+' UTC',null);
+ try{
+  const base=await collectorBase();
+  const job=await api('ranges',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({start,end})});
+  while(epoch===requestEpoch){
+   const status=await api('ranges/'+job.id);
+   if(epoch!==requestEpoch)return;
+   if(status.state==='failed')throw Error(status.error);
+   const detail=status.done.toLocaleString()+' / '+status.total.toLocaleString()+' archive slots · '+status.rows.toLocaleString()+' event records';
+   if(status.state==='ready'){
+    const slots=await api('ranges/'+job.id+'/manifest');
+    if(epoch!==requestEpoch)return;
+    const box=$('#fullResults');
+    rangeSelection={id:job.id};box.hidden=false;
+    const labels=['Total records','With any flag','Redundancy indicators','Spatial limitations','Extraction indicators'];
+    box.innerHTML='<h2>Full-range screening results</h2><p>'+esc(start)+' through '+esc(end)+' UTC · '+detail+' · '+status.gaps+' slots with missing event or mention files</p><div class="cards">'+status.counts.map((n,i)=>card(n.toLocaleString(),labels[i])).join('')+'</div><p><a id="allEvents">Download all event rows (TSV)</a></p><h3>Explore an archive</h3><p>The map, record explorer and detailed checks below use the selected 15-minute archive. The totals above cover the entire date range.</p><label>Archive (UTC)<select id="fullSlot">'+slots.map(([s,n,g])=>'<option value="'+esc(s)+'">'+esc(slotLabel(s))+' · '+n+' records'+(['',' · event file missing',' · mentions missing',' · both files missing'][g])+'</option>').join('')+'</select></label> <button id="openArchive">Open archive</button><p id="archiveNote" role="status"></p>';
+    $('#allEvents').href=base+'/api/ranges/'+encodeURIComponent(job.id)+'/events.tsv';
+    $('#openArchive').onclick=openArchive;
+    $('#fullSlot').value=(slots.find(x=>x[1]>0)||slots[0])[0];
+    setProgress(status.gaps?'Screening complete with archive gaps':'Screening complete · Ready to analyze',detail,status.total,status.total);
+    if(!dirty)await openArchive();else $('#archiveNote').textContent='Save your review, then choose Open archive.';
+    return;
+   }
+   setProgress(({queued:'Queued for collection',collecting:'Collecting all event records…',screening:'Checking records across archives…'})[status.state],detail,status.state==='queued'?null:status.done,status.total);
+   await new Promise(resolve=>setTimeout(resolve,3000));
+  }
+ }catch(e){if(epoch===requestEpoch)setProgress('Collection interrupted',e.message+' Submit the same dates to resume.')}
+ finally{if(epoch===requestEpoch){downloading=false;estimate()}}
+}
+
+$('#collectionMode').onchange=estimate;
+$('#rangeFetch').onclick=()=>$('#collectionMode').value==='sample'?collectNew():collectFull();
 $('#useRange').onclick=()=>{if(pendingSample&&switchSample(pendingSample)){$('#useRange').hidden=true;$('#rangeState').textContent='Screening complete · Ready to analyze'}};
 
 show();
 </script></html>
+
