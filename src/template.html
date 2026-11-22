@@ -343,7 +343,7 @@ panel.innerHTML=`<h2 id="rangesTitle">Date ranges</h2>
 <section class="date-section"><h2>Download GDELT records</h2>
 <p><strong>90 days maximum per download.</strong> Choose completed UTC days from February 19, 2015 onward. Both dates are included.</p>
 <div class="controls"><label>Download from<input id="downloadStart" type="date" required></label><label>Download through<input id="downloadEnd" type="date" required></label></div>
-<label>Records to collect<select id="collectionMode"><option value="all">All available event records</option><option value="sample">Quick sample (up to 12 records per day)</option></select></label><p id="rangeScope" aria-live="polite"></p><button id="rangeFetch" class="primary">Download records</button>
+<label>Records to collect<select id="collectionMode"><option value="sample" selected>Quick sample (up to 12 records per day)</option><option value="all">All available event records</option></select></label><p id="rangeScope" aria-live="polite"></p><button id="rangeFetch" class="primary">Download records</button>
 <div id="downloadStatus" hidden><strong id="rangeState" role="status"></strong><progress id="downloadBar" aria-label="Collection progress"></progress><p id="downloadDetail"></p><button hidden id="useRange" class="primary">View downloaded records</button></div></section>
 <section class="date-section"><h2>Filter the records on screen</h2><p id="filterScope"></p>
 <div class="controls"><label>Archive date from<input id="rangeStart" type="date" required></label><label>Archive date through<input id="rangeEnd" type="date" required></label><label>Event date from (optional)<input id="eventStart" type="date"></label><label>Event date through (optional)<input id="eventEnd" type="date"></label></div>
@@ -380,7 +380,7 @@ function syncDownloadDates(){
 }
 function estimate(){
  const {days,message}=downloadDates();
- $('#rangeScope').textContent=message||($('#collectionMode').value==='sample'?days+' day(s) · up to '+(12*days)+' sampled records.':(days*96).toLocaleString()+' quarter-hour archives · all available event rows.');
+ $('#rangeScope').textContent=message||($('#collectionMode').value==='sample'?days+' daily archive slots · up to '+(12*days).toLocaleString()+' event records for review.':(days*96).toLocaleString()+' quarter-hour archive slots · all event rows, with no record limit. Shorten the dates or choose Quick sample for a smaller collection.');
  $('#rangeFetch').disabled=downloading||Boolean(message);
  const selected=downloadDates();
  $('#filterScope').textContent=(selected.message?'':'Selected download: '+selected.start+' through '+selected.end+' UTC. ')+
