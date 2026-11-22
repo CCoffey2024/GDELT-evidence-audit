@@ -366,16 +366,27 @@ function setProgress(title,detail,done,total){
  else if(done!==undefined){bar.max=total;bar.value=done}
 }
 function inputsFor(data){
- $('#rangeStart').value=data.start;$('#rangeEnd').value=lastDay(data);
+ $('#rangeStart').value=data.full && rangeSelection ? rangeSelection.start : data.start;
+ $('#rangeEnd').value=data.full && rangeSelection ? rangeSelection.end : lastDay(data);
  $('#eventStart').value='';$('#eventEnd').value='';
+}
+function syncDownloadDates(){
+ const {start,end,message}=downloadDates();
+ if(!message){
+  $('#rangeStart').value=start;
+  $('#rangeEnd').value=end;
+ }
+ estimate();
 }
 function estimate(){
  const {days,message}=downloadDates();
  $('#rangeScope').textContent=message||($('#collectionMode').value==='sample'?days+' day(s) · up to '+(12*days)+' sampled records.':(days*96).toLocaleString()+' quarter-hour archives · all available event rows.');
  $('#rangeFetch').disabled=downloading||Boolean(message);
- $('#filterScope').textContent='Available archive dates: '+loaded.start+' through '+lastDay(loaded)+' UTC.';
+ const selected=downloadDates();
+ $('#filterScope').textContent=(selected.message?'':'Selected download: '+selected.start+' through '+selected.end+' UTC. ')+
+  (loaded.full?'Filtering the open archive: '+slotLabel(loaded.batches[0].stamp)+' UTC.':'Filters apply to the currently loaded records: '+loaded.start+' through '+lastDay(loaded)+' UTC.');
  $('#rangeRestore').hidden=loaded===sourceSnapshot&&!rangeSelection;
- for(const id of ['rangeStart','rangeEnd']){$('#'+id).min=loaded.start;$('#'+id).max=lastDay(loaded)}
+ for(const id of ['rangeStart','rangeEnd']){$('#'+id).min='2015-02-19';$('#'+id).max=yesterday}
 }
 function viewRange(source,start,end,ef,et){
  const batches=source.batches.filter(b=>b.day>=start&&b.day<=end).map(b=>({...b,sample:b.sample.filter(x=>{
@@ -385,7 +396,7 @@ function viewRange(source,start,end,ef,et){
 }
 function applyRange(){
  const [s,e,ef,et]=['rangeStart','rangeEnd','eventStart','eventEnd'].map(id=>$('#'+id).value);
- if(!s||!e||s>e||s<loaded.start||e>lastDay(loaded)){tell('Choose archive dates inside the loaded sample, or use Download records above.');return}
+ if(!s||!e||s>e||s<'2015-02-19'||e>yesterday){tell('Choose a valid archive interval ending on a completed UTC day.');return}
  if(ef&&et&&ef>et){tell('Coded event end must follow its start.');return}
  if(!safeLeave())return;
  D=viewRange(loaded,s,e,ef,et);eventBounds=[ef,et];records=flatten(D);byid=new Map(records.map(x=>[x.id,x]));flags=scanRows(records);
@@ -473,9 +484,9 @@ async function collectNew(){
 const yesterday=isoDay(Date.now()-86400000);
  for(const id of ['downloadStart','downloadEnd']){$('#'+id).min='2015-02-19';$('#'+id).max=yesterday}
  $('#downloadEnd').value=yesterday;$('#downloadStart').value=isoDay(Date.parse(yesterday)-89*86400000);
- inputsFor(loaded);estimate();
+ inputsFor(loaded);syncDownloadDates();
 $('#activeRange').textContent=windowText+' · '+records.length.toLocaleString()+' records';
-$('#rangeApply').onclick=applyRange;$('#downloadStart').oninput=$('#downloadEnd').oninput=estimate;
+$('#rangeApply').onclick=applyRange;$('#downloadStart').oninput=$('#downloadEnd').oninput=syncDownloadDates;
 $('#rangeClear').onclick=()=>switchSample(loaded);
 $('#rangeRestore').onclick=()=>{if(switchSample(sourceSnapshot)){requestEpoch++;rangeSelection=null;$('#fullResults').hidden=true;pendingSample=null;downloading=false;estimate();$('#downloadStatus').hidden=true;$('#useRange').hidden=true}};
 
@@ -530,7 +541,7 @@ async function collectFull(){
     const slots=await api('ranges/'+job.id+'/manifest');
     if(epoch!==requestEpoch)return;
     const box=$('#fullResults');
-    rangeSelection={id:job.id};box.hidden=false;
+    rangeSelection={id:job.id,start,end};box.hidden=false;
     const labels=['Total records','With any flag','Redundancy indicators','Spatial limitations','Extraction indicators'];
     box.innerHTML='<h2>Full-range screening results</h2><p>'+esc(start)+' through '+esc(end)+' UTC · '+detail+' · '+status.gaps+' slots with missing event or mention files</p><div class="cards">'+status.counts.map((n,i)=>card(n.toLocaleString(),labels[i])).join('')+'</div><p><a id="allEvents">Download all event rows (TSV)</a></p><h3>Explore an archive</h3><p>The map, record explorer and detailed checks below use the selected 15-minute archive. The totals above cover the entire date range.</p><label>Archive (UTC)<select id="fullSlot">'+slots.map(([s,n,g])=>'<option value="'+esc(s)+'">'+esc(slotLabel(s))+' · '+n+' records'+(['',' · event file missing',' · mentions missing',' · both files missing'][g])+'</option>').join('')+'</select></label> <button id="openArchive">Open archive</button><p id="archiveNote" role="status"></p>';
     $('#allEvents').href=base+'/api/ranges/'+encodeURIComponent(job.id)+'/events.tsv';
