@@ -17,3 +17,9 @@ Read the cached Article preview first. Selecting an event renders plain text bun
 Save the review with your name and evidence notes. Browser storage is specific to the device, browser profile, and site. Export review JSON before moving from a local file to a hosted URL. Import into the same sample on the destination. When imported decisions conflict, the dashboard retains existing decisions and reports the conflict count. Keep the original exports for adjudication.
 
 Print the batch brief to describe screening outcomes, or print the analyst review overview to present human judgments and their denominators.
+
+## Compare dates
+
+Open **Date ranges** above any tab. Archive dates refer to UTC acquisition dates. Both bounds are inclusive. **Filter loaded records** applies the selected archive dates and optional coded-event dates across the dashboard. Batch flags are recalculated for the selected rows. A record can also list related IDs elsewhere in the loaded sample. The map, CSV, archive ledger and review totals follow the active range. Review decisions persist by event ID; the review export includes only decisions in the current view.
+
+To retrieve another period on a collector-enabled host, enter 1–90 complete UTC days and choose **Load a new sample**. The estimated count is an upper bound. When records are ready, choose **Open collected sample**. Article previews fill in as metadata arrives. The request uses archive dates only; set optional coded-event dates after opening the collected sample. **Show full loaded sample** clears filters. **Restore bundled snapshot** returns to the original 92-day demonstration.
