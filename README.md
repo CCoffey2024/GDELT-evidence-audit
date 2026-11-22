@@ -10,6 +10,8 @@ How much can an analyst infer from a machine-coded news event? This dashboard le
 
 Download or clone the repository and double-click `public/index.html`. The event sample, Leaflet map, basemap, and screening rules load locally. Article and archive links require internet access.
 
+Use **Date ranges** to filter the snapshot across tabs. On a collector-enabled deployment you can also request 1–90 completed UTC days from the GDELT archives. [Collector setup](docs/deployment.md#date-ranges-and-on-demand-archives)
+
 ## A five-minute walkthrough
 
 1. Open **Overview** and select **Repeated coded claim**. Each candidate links to the other sampled IDs that matched the rule.
