@@ -263,12 +263,11 @@ function batchView(){
  const count=k=>records.filter(x=>passes(x.id,k)).length;
  const drill=(k,title,extra='')=>'<button class="card" data-filter="'+esc(k)+'"><strong>'+count(k).toLocaleString()+'</strong>'+esc(title)+extra+'</button>';
  const n=count('any');
- app.innerHTML='<h1>Batch evidence screen</h1><p class="sub">GDELT archive sample · '+windowText+' · '+records.length.toLocaleString()+' records scanned</p><div class="cards">'+drill('','Total records')+drill('any','With any flag')+drill('Redundancy','Redundancy indicators')+drill('Spatial','Spatial limitations')+drill('Extraction','Extraction indicators')+'</div><div class="toolbar"><button id="rerun">Run batch again</button><button id="csv">Export batch CSV</button><button id="printBatch">Print batch brief</button></div><p>'+n+' records triggered one or more checks. Categories overlap. These rules inspect archive metadata and URL text. Article content and geographic boundaries require separate verification.</p><section class="panel"><h2>Screening results by rule</h2><div class="scroll"><table><thead><tr><th>Area</th><th>Check</th><th>Records</th><th>What triggered the check</th></tr></thead><tbody>'+Object.entries(rulebook).map(([k,[group,title,desc]])=>'<tr><td>'+group+'</td><th>'+title+'</th><td><button data-filter="'+k+'">'+count(k)+'</button></td><td>'+desc+'</td></tr>').join('')+'</tbody></table></div></section>';
+ app.innerHTML='<h1>Batch evidence screen</h1><p class="sub">GDELT archive sample · '+windowText+' · '+records.length.toLocaleString()+' records scanned</p><div class="cards">'+drill('','Total records')+drill('any','With any flag')+drill('Redundancy','Redundancy indicators')+drill('Spatial','Spatial limitations')+drill('Extraction','Extraction indicators')+'</div><div class="toolbar"><button id="csv">Export batch CSV</button><button id="printBatch">Print batch brief</button></div><p>'+n+' records triggered one or more checks. Categories overlap. These rules inspect archive metadata and URL text. Article content and geographic boundaries require separate verification.</p><section class="panel"><h2>Screening results by rule</h2><div class="scroll"><table><thead><tr><th>Area</th><th>Check</th><th>Records</th><th>What triggered the check</th></tr></thead><tbody>'+Object.entries(rulebook).map(([k,[group,title,desc]])=>'<tr><td>'+group+'</td><th>'+title+'</th><td><button data-filter="'+k+'">'+count(k)+'</button></td><td>'+desc+'</td></tr>').join('')+'</tbody></table></div></section>';
  const priority=records.filter(x=>hits(x.id).length).sort((a,b)=>rankFlags(b.id)-rankFlags(a.id)||a.id.localeCompare(b.id)).slice(0,5);
  const short=document.createElement('section');short.className='panel';short.innerHTML='<h2>Start with these records</h2><p>Ordered by rule weight and then event ID. A repeated coded claim or invalid coordinate receives the highest individual weight.</p>'+priority.map(x=>'<p><button data-id="'+esc(x.id)+'">'+esc(x.id)+'</button> <b>'+esc(label(x.raw[26]))+'</b> · '+esc(x.raw[52]||'Location unspecified')+'<br>'+esc(hits(x.id).map(f=>rulebook[f.rule][1]).join(' · '))+'</p>').join('');app.append(short);
  short.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>openQueue('',b.dataset.id));
  app.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>openQueue(b.dataset.filter));
- $('#rerun').onclick=()=>{flags=scanRows(records);batchView();tell('Batch complete. Scanned '+records.length+' records.')};
  $('#printBatch').onclick=()=>window.print();
  $('#csv').onclick=()=>{
  const cells=v=>'"'+String(v).replace(/^[=+@-]/,m=>"'"+m).replace(/"/g,'""')+'"';
@@ -439,14 +438,15 @@ async function collectNew(){
     setProgress('Loading downloaded records…',status.total+' of '+status.total+' archive days processed.',status.total,status.total);
     const data=await api('jobs/'+job.id+'/result');if(epoch!==requestEpoch)return;
     data.previews={...(sourceSnapshot.previews||{})};pendingSample=data;delivered=true;
-    $('#useRange').hidden=false;
+    if(!dirty)switchSample(data);
+    $('#useRange').hidden=loaded===data;
    }
    if(delivered){
     const count=flatten(pendingSample).length;
     const gaps=pendingSample.batches.filter(b=>b.events.error||b.mentions.error).length;
     const details=count.toLocaleString()+' records · '+start+' through '+end+' UTC.'+(gaps?' Archive gaps on '+gaps+' day(s).':'')+
       (status.metadata==='collecting'?' Article previews are still loading.':'');
-    setProgress(loaded===pendingSample?'Viewing downloaded records':'Download complete · Ready to analyze',details,days,days);
+    setProgress(loaded===pendingSample?'Screening complete · Ready to analyze':'Download complete · Save your review, then view downloaded records',details,days,days);
     downloading=false;estimate();
    }else if(status.state==='queued'){
     setProgress('Queued for download',start+' through '+end+' UTC · Waiting for the collector.',null);
@@ -465,7 +465,7 @@ async function collectNew(){
    await new Promise(resolve=>setTimeout(resolve,delivered?5000:2000));
   }
  }catch(e){if(epoch===requestEpoch){
-  if(pendingSample)setProgress(loaded===pendingSample?'Viewing downloaded records':'Records ready to analyze','Article preview update interrupted. '+e.message,days,days);
+  if(pendingSample)setProgress(loaded===pendingSample?'Screening complete · Ready to analyze':'Download complete · View downloaded records when ready','Article preview update interrupted. '+e.message,days,days);
   else setProgress('Download failed',e.message+' Choose Download records to retry.');
  }}finally{if(epoch===requestEpoch){downloading=false;estimate()}}
 }
@@ -478,7 +478,7 @@ $('#rangeApply').onclick=applyRange;$('#downloadStart').oninput=$('#downloadEnd'
 $('#rangeClear').onclick=()=>switchSample(loaded);
 $('#rangeRestore').onclick=()=>{if(switchSample(sourceSnapshot)){requestEpoch++;pendingSample=null;downloading=false;estimate();$('#downloadStatus').hidden=true;$('#useRange').hidden=true}};
 $('#rangeFetch').onclick=collectNew;
-$('#useRange').onclick=()=>{if(pendingSample&&switchSample(pendingSample)){$('#useRange').hidden=true;$('#rangeState').textContent='Viewing downloaded records'}};
+$('#useRange').onclick=()=>{if(pendingSample&&switchSample(pendingSample)){$('#useRange').hidden=true;$('#rangeState').textContent='Screening complete · Ready to analyze'}};
 
 show();
 </script></html>
