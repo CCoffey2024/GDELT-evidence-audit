@@ -4,7 +4,7 @@
 
 
 #atlas{height:clamp(360px,61vh,700px);background:#d8e9ee;border:1px solid #a5bbc4;border-radius:9px;z-index:0} #placeList{scroll-margin:15px}</style>
-<header><div class="masthead"><b>BlueLens Analytics</b><strong>GDELT Evidence Audit</strong></div><span>Research methods &nbsp;/&nbsp; Data provenance</span></header><nav id="nav"></nav><main><div id="message" role="status"></div><details id="ranges" class="panel" open></details><p id="activeRange" class="sub"></p><section id="fullResults" class="panel" hidden></section><div id="app"></div></main>
+<header><div class="masthead"><b>BlueLens Analytics</b><strong>GDELT Evidence Audit</strong></div><span>Research methods &nbsp;/&nbsp; Data provenance</span></header><nav id="nav"></nav><main><div id="message" role="status"></div><section id="ranges" class="panel" aria-labelledby="rangesTitle"></section><p id="activeRange" class="sub"></p><section id="fullResults" class="panel" hidden></section><div id="app"></div></main>
 <script>/* Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: Leaflet
 Upstream-Contact: https://github.com/Leaflet/Leaflet/issues
@@ -339,7 +339,7 @@ const sourceSnapshot=D;
 let loaded=D, loadedFlags=flags, eventBounds=['',''];
 let requestEpoch=0,pendingSample=null,rangeSelection=null,archiveRequest=0;
 const panel=$('#ranges');
-panel.innerHTML=`<summary>Date ranges</summary>
+panel.innerHTML=`<h2 id="rangesTitle">Date ranges</h2>
 <section class="date-section"><h2>Download GDELT records</h2>
 <p><strong>90 days maximum per download.</strong> Choose completed UTC days from February 19, 2015 onward. Both dates are included.</p>
 <div class="controls"><label>Download from<input id="downloadStart" type="date" required></label><label>Download through<input id="downloadEnd" type="date" required></label></div>
