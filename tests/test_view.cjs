@@ -108,5 +108,22 @@ async function testFullUI(){
  console.log('Verified full-range totals, export link, archive detail and restore.');
 }
 
-testDownloadUI().then(testFullUI).catch(e=>{console.error(e);process.exitCode=1});
+async function testPreflight(){
+ const dialog=nodes['#volumeDialog'];
+ dialog.showModal=()=>dialog.open=true;
+ dialog.close=()=>{dialog.open=false;dialog.onclose()};
+ run("let calls=[];api=async(path,options)=>{calls.push([path,options?.method]);return {exact:4321}}");
+ context.AbortSignal=AbortSignal;
+ nodes['#collectionMode'].value='sample';
+ await nodes['#rangeFetch'].onclick();
+ assert.equal(dialog.open,true);
+ assert.match(nodes['#volumeSize'].textContent,/4,321 event rows/);
+ assert.match(nodes['#volumeSize'].textContent,/up to 24 records/);
+ nodes['#reviseDates'].onclick();
+ assert.equal(run("calls.some(([,method])=>method==='POST')"),false);
+ console.log('Size preview and dismissal issue no collection request.');
+}
+
+testDownloadUI().then(testFullUI).then(testPreflight).catch(e=>{console.error(e);process.exitCode=1});
+
 

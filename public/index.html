@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GDELT Evidence Audit · BlueLens Analytics</title><style>
 :root{font:16px/1.5 "Segoe UI",Arial,sans-serif;color:#172a3a;background:#eef2f4;--navy:#142c40;--blue:#175882;--teal:#087b73}*{box-sizing:border-box}body{margin:0}header{background:var(--navy);color:white;padding:14px max(4vw,16px);display:flex;justify-content:space-between;align-items:center}.masthead{display:grid;gap:3px}.masthead b{font-size:.88rem;letter-spacing:.08em}.masthead strong{font-size:clamp(1.75rem,3.2vw,2.75rem);line-height:1.15;letter-spacing:-.035em}header span{color:#b7d0df}nav{background:white;padding:0 max(4vw,16px);border-bottom:1px solid #bbcbd4;display:flex;gap:20px}button,select,input,textarea{font:inherit}button,.button,select{border:1px solid #a5bac5;border-radius:5px;background:white;padding:7px 12px;color:var(--navy);cursor:pointer}button:hover,.button:hover{background:#e2f0f2}button:disabled{opacity:.45;cursor:default}nav button{border:0;border-bottom:3px solid transparent;border-radius:0;padding:13px 3px}nav button[aria-current=true]{border-color:var(--teal);font-weight:700}.primary{background:var(--teal);color:white;border-color:var(--teal)}main{max-width:1380px;margin:26px auto;padding:0 4vw}h1{font-size:clamp(28px,4vw,44px);line-height:1.08;letter-spacing:-.04em;margin:10px 0}h2{margin:0 0 12px;font-size:21px}h3{font-size:17px;margin:15px 0 6px}p{margin:6px 0 16px}.sub,small{color:#486170}.cards,.grid,.controls,.toolbar{display:flex;flex-wrap:wrap;gap:12px}.cards{margin:18px 0}.card,.panel{background:white;border:1px solid #cbd7df;border-radius:9px;padding:clamp(14px,2vw,26px)}.card{flex:1;min-width:150px;border-top:3px solid var(--teal)}.card strong{display:block;font-size:31px;line-height:1.3}.grid>.panel{flex:1;min-width:min(340px,100%)}.panel{margin-bottom:14px}table{border-collapse:collapse;width:100%;font-size:.92rem;text-align:left}th,td{border-bottom:1px solid #d6e0e6;padding:8px 6px;vertical-align:top}th{color:#456273}.scroll{overflow:auto}.controls{align-items:end;margin:18px 0}.controls label,.form label{display:block;font-weight:600}.controls input,.controls select,textarea,.form input,.form select{display:block;padding:8px;border:1px solid #a5bac5;border-radius:4px;background:white;max-width:100%}.controls input{width:240px}.toolbar{align-items:center;margin:12px 0}.tag{color:var(--blue);font-weight:650}.layout{display:grid;grid-template-columns:minmax(275px,.85fr) minmax(350px,1.5fr);gap:16px;align-items:start}.item{text-align:left;display:block;width:100%;border:0;border-radius:0;border-bottom:1px solid #ccdce2;padding:12px}.item[aria-current=true]{background:#e3f3ef;border-left:4px solid var(--teal)}.item span,.item small{display:block}.form input,.form textarea{width:100%;margin-bottom:9px}.form select{margin-bottom:8px;width:100%}.fields{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.key{color:#476578;font-size:.88rem}a{color:#075f85;overflow-wrap:anywhere}pre{white-space:pre-wrap;word-break:break-all;background:#f0f5f6;padding:12px;font-size:.85rem}details{margin:12px 0}summary{cursor:pointer;font-weight:650}.bar{height:9px;background:#e4ebee;border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:#137d76}.msg{background:#e5f3f0;color:#184e4e;padding:10px 14px}.source{overflow-wrap:anywhere}.file{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #ea9740}.row{display:flex;justify-content:space-between;gap:12px;align-items:center}#message:empty{display:none}@media(max-width:780px){.layout{display:block}.list{max-height:330px;overflow:auto}.fields{grid-template-columns:1fr}header span{display:none}}@media print{nav,.toolbar,.controls,#message,button,.file{display:none!important}main{max-width:none;padding:0}.card,.panel,tr{break-inside:avoid}header{color:black;background:white}.grid{display:block}}
-@media print{[data-filter]{display:inline-block!important;border:0;padding:0}}button.card{text-align:left}nav{flex-wrap:wrap}.panel p{overflow-wrap:anywhere}.article-preview{margin-top:18px;background:#f4f9fa;border-left:4px solid var(--teal)}.article-preview h2{font-size:1rem;color:#34586b}.article-preview h3{margin:6px 0}.article-preview p{margin:8px 0}.date-section{margin-top:1em;padding-top:1em;border-top:1px solid #cedce1}.date-section .controls{margin:.6em 0}.date-section h2{margin:0}.date-section p{margin:.45em 0 .8em}#downloadStatus{margin:1em 0;padding:1em;border-left:4px solid var(--teal);background:#edf6f5}#downloadBar{display:block;width:min(100%,42rem);height:1rem;accent-color:var(--teal);margin:.65rem 0}#ranges [hidden]{display:none!important}</style><style>.leaflet-pane,.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-tile-container,.leaflet-pane>svg,.leaflet-pane>canvas,.leaflet-zoom-box,.leaflet-image-layer,.leaflet-layer{position:absolute;left:0;top:0}.leaflet-container{overflow:hidden}.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow{-webkit-user-select:none;-moz-user-select:none;user-select:none;-webkit-user-drag:none}.leaflet-tile::selection{background:transparent}.leaflet-safari .leaflet-tile{image-rendering:-webkit-optimize-contrast}.leaflet-safari .leaflet-tile-container{width:1600px;height:1600px;-webkit-transform-origin:0 0}.leaflet-marker-icon,.leaflet-marker-shadow{display:block}.leaflet-container .leaflet-overlay-pane svg,.leaflet-container .leaflet-marker-pane img,.leaflet-container .leaflet-shadow-pane img,.leaflet-container .leaflet-tile-pane img,.leaflet-container img.leaflet-image-layer,.leaflet-container .leaflet-tile{max-width:none !important;max-height:none !important}.leaflet-container.leaflet-touch-zoom{-ms-touch-action:pan-x pan-y;touch-action:pan-x pan-y}.leaflet-container.leaflet-touch-drag{-ms-touch-action:pinch-zoom;touch-action:none;touch-action:pinch-zoom}.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom{-ms-touch-action:none;touch-action:none}.leaflet-container{-webkit-tap-highlight-color:transparent}.leaflet-container a{-webkit-tap-highlight-color:rgba(51,181,229,0.4)}.leaflet-tile{filter:inherit;visibility:hidden}.leaflet-tile-loaded{visibility:inherit}.leaflet-zoom-box{width:0;height:0;-moz-box-sizing:border-box;box-sizing:border-box;z-index:800}.leaflet-overlay-pane svg{-moz-user-select:none}.leaflet-pane{z-index:400}.leaflet-tile-pane{z-index:200}.leaflet-overlay-pane{z-index:400}.leaflet-shadow-pane{z-index:500}.leaflet-marker-pane{z-index:600}.leaflet-tooltip-pane{z-index:650}.leaflet-popup-pane{z-index:700}.leaflet-map-pane canvas{z-index:100}.leaflet-map-pane svg{z-index:200}.leaflet-vml-shape{width:1px;height:1px}.lvml{behavior:url(#default#VML);display:inline-block;position:absolute}.leaflet-control{position:relative;z-index:800;pointer-events:visiblePainted;pointer-events:auto}.leaflet-top,.leaflet-bottom{position:absolute;z-index:1000;pointer-events:none}.leaflet-top{top:0}.leaflet-right{right:0}.leaflet-bottom{bottom:0}.leaflet-left{left:0}.leaflet-control{float:left;clear:both}.leaflet-right .leaflet-control{float:right}.leaflet-top .leaflet-control{margin-top:10px}.leaflet-bottom .leaflet-control{margin-bottom:10px}.leaflet-left .leaflet-control{margin-left:10px}.leaflet-right .leaflet-control{margin-right:10px}.leaflet-fade-anim .leaflet-tile{will-change:opacity}.leaflet-fade-anim .leaflet-popup{opacity:0;-webkit-transition:opacity 0.2s linear;-moz-transition:opacity 0.2s linear;transition:opacity 0.2s linear}.leaflet-fade-anim .leaflet-map-pane .leaflet-popup{opacity:1}.leaflet-zoom-animated{-webkit-transform-origin:0 0;-ms-transform-origin:0 0;transform-origin:0 0}.leaflet-zoom-anim .leaflet-zoom-animated{will-change:transform}.leaflet-zoom-anim .leaflet-zoom-animated{-webkit-transition:-webkit-transform 0.25s cubic-bezier(0, 0, 0.25, 1);-moz-transition:-moz-transform 0.25s cubic-bezier(0, 0, 0.25, 1);transition:transform 0.25s cubic-bezier(0, 0, 0.25, 1)}.leaflet-zoom-anim .leaflet-tile,.leaflet-pan-anim .leaflet-tile{-webkit-transition:none;-moz-transition:none;transition:none}.leaflet-zoom-anim .leaflet-zoom-hide{visibility:hidden}.leaflet-interactive{cursor:pointer}.leaflet-grab{cursor:-webkit-grab;cursor:-moz-grab;cursor:grab}.leaflet-crosshair,.leaflet-crosshair .leaflet-interactive{cursor:crosshair}.leaflet-popup-pane,.leaflet-control{cursor:auto}.leaflet-dragging .leaflet-grab,.leaflet-dragging .leaflet-grab .leaflet-interactive,.leaflet-dragging .leaflet-marker-draggable{cursor:move;cursor:-webkit-grabbing;cursor:-moz-grabbing;cursor:grabbing}.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-image-layer,.leaflet-pane>svg path,.leaflet-tile-container{pointer-events:none}.leaflet-marker-icon.leaflet-interactive,.leaflet-image-layer.leaflet-interactive,.leaflet-pane>svg path.leaflet-interactive,svg.leaflet-image-layer.leaflet-interactive path{pointer-events:visiblePainted;pointer-events:auto}.leaflet-container{background:#ddd;outline:0}.leaflet-container a{color:#0078A8}.leaflet-container a.leaflet-active{outline:2px solid orange}.leaflet-zoom-box{border:2px dotted #38f;background:rgba(255,255,255,0.5)}.leaflet-container{font:12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif}.leaflet-bar{box-shadow:0 1px 5px rgba(0,0,0,0.65);border-radius:4px}.leaflet-bar a,.leaflet-bar a:hover{background-color:#fff;border-bottom:1px solid #ccc;width:26px;height:26px;line-height:26px;display:block;text-align:center;text-decoration:none;color:black}.leaflet-bar a,.leaflet-control-layers-toggle{background-position:50% 50%;background-repeat:no-repeat;display:block}.leaflet-bar a:hover{background-color:#f4f4f4}.leaflet-bar a:first-child{border-top-left-radius:4px;border-top-right-radius:4px}.leaflet-bar a:last-child{border-bottom-left-radius:4px;border-bottom-right-radius:4px;border-bottom:none}.leaflet-bar a.leaflet-disabled{cursor:default;background-color:#f4f4f4;color:#bbb}.leaflet-touch .leaflet-bar a{width:30px;height:30px;line-height:30px}.leaflet-touch .leaflet-bar a:first-child{border-top-left-radius:2px;border-top-right-radius:2px}.leaflet-touch .leaflet-bar a:last-child{border-bottom-left-radius:2px;border-bottom-right-radius:2px}.leaflet-control-zoom-in,.leaflet-control-zoom-out{font:bold 18px 'Lucida Console', Monaco, monospace;text-indent:1px}.leaflet-touch .leaflet-control-zoom-in,.leaflet-touch .leaflet-control-zoom-out{font-size:22px}.leaflet-control-layers{box-shadow:0 1px 5px rgba(0,0,0,0.4);background:#fff;border-radius:5px}.leaflet-control-layers-toggle{background-image:url(images/layers.png);width:36px;height:36px}.leaflet-retina .leaflet-control-layers-toggle{background-image:url(images/layers-2x.png);background-size:26px 26px}.leaflet-touch .leaflet-control-layers-toggle{width:44px;height:44px}.leaflet-control-layers .leaflet-control-layers-list,.leaflet-control-layers-expanded .leaflet-control-layers-toggle{display:none}.leaflet-control-layers-expanded .leaflet-control-layers-list{display:block;position:relative}.leaflet-control-layers-expanded{padding:6px 10px 6px 6px;color:#333;background:#fff}.leaflet-control-layers-scrollbar{overflow-y:scroll;overflow-x:hidden;padding-right:5px}.leaflet-control-layers-selector{margin-top:2px;position:relative;top:1px}.leaflet-control-layers label{display:block}.leaflet-control-layers-separator{height:0;border-top:1px solid #ddd;margin:5px -10px 5px -6px}.leaflet-default-icon-path{background-image:url(images/marker-icon.png)}.leaflet-container .leaflet-control-attribution{background:#fff;background:rgba(255,255,255,0.7);margin:0}.leaflet-control-attribution,.leaflet-control-scale-line{padding:0 5px;color:#333}.leaflet-control-attribution a{text-decoration:none}.leaflet-control-attribution a:hover{text-decoration:underline}.leaflet-container .leaflet-control-attribution,.leaflet-container .leaflet-control-scale{font-size:11px}.leaflet-left .leaflet-control-scale{margin-left:5px}.leaflet-bottom .leaflet-control-scale{margin-bottom:5px}.leaflet-control-scale-line{border:2px solid #777;border-top:none;line-height:1.1;padding:2px 5px 1px;font-size:11px;white-space:nowrap;overflow:hidden;-moz-box-sizing:border-box;box-sizing:border-box;background:#fff;background:rgba(255,255,255,0.5)}.leaflet-control-scale-line:not(:first-child){border-top:2px solid #777;border-bottom:none;margin-top:-2px}.leaflet-control-scale-line:not(:first-child):not(:last-child){border-bottom:2px solid #777}.leaflet-touch .leaflet-control-attribution,.leaflet-touch .leaflet-control-layers,.leaflet-touch .leaflet-bar{box-shadow:none}.leaflet-touch .leaflet-control-layers,.leaflet-touch .leaflet-bar{border:2px solid rgba(0,0,0,0.2);background-clip:padding-box}.leaflet-popup{position:absolute;text-align:center;margin-bottom:20px}.leaflet-popup-content-wrapper{padding:1px;text-align:left;border-radius:12px}.leaflet-popup-content{margin:13px 19px;line-height:1.4}.leaflet-popup-content p{margin:18px 0}.leaflet-popup-tip-container{width:40px;height:20px;position:absolute;left:50%;margin-left:-20px;overflow:hidden;pointer-events:none}.leaflet-popup-tip{width:17px;height:17px;padding:1px;margin:-10px auto 0;-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg)}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:white;color:#333;box-shadow:0 3px 14px rgba(0,0,0,0.4)}.leaflet-container a.leaflet-popup-close-button{position:absolute;top:0;right:0;padding:4px 4px 0 0;border:none;text-align:center;width:18px;height:14px;font:16px/14px Tahoma, Verdana, sans-serif;color:#c3c3c3;text-decoration:none;font-weight:bold;background:transparent}.leaflet-container a.leaflet-popup-close-button:hover{color:#999}.leaflet-popup-scrolled{overflow:auto;border-bottom:1px solid #ddd;border-top:1px solid #ddd}.leaflet-oldie .leaflet-popup-content-wrapper{-ms-zoom:1}.leaflet-oldie .leaflet-popup-tip{width:24px;margin:0 auto;-ms-filter:"progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)";filter:progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)}.leaflet-oldie .leaflet-popup-tip-container{margin-top:-1px}.leaflet-oldie .leaflet-control-zoom,.leaflet-oldie .leaflet-control-layers,.leaflet-oldie .leaflet-popup-content-wrapper,.leaflet-oldie .leaflet-popup-tip{border:1px solid #999}.leaflet-div-icon{background:#fff;border:1px solid #666}.leaflet-tooltip{position:absolute;padding:6px;background-color:#fff;border:1px solid #fff;border-radius:3px;color:#222;white-space:nowrap;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,0.4)}.leaflet-tooltip.leaflet-clickable{cursor:pointer;pointer-events:auto}.leaflet-tooltip-top:before,.leaflet-tooltip-bottom:before,.leaflet-tooltip-left:before,.leaflet-tooltip-right:before{position:absolute;pointer-events:none;border:6px solid transparent;background:transparent;content:""}.leaflet-tooltip-bottom{margin-top:6px}.leaflet-tooltip-top{margin-top:-6px}.leaflet-tooltip-bottom:before,.leaflet-tooltip-top:before{left:50%;margin-left:-6px}.leaflet-tooltip-top:before{bottom:0;margin-bottom:-12px;border-top-color:#fff}.leaflet-tooltip-bottom:before{top:0;margin-top:-12px;margin-left:-6px;border-bottom-color:#fff}.leaflet-tooltip-left{margin-left:-6px}.leaflet-tooltip-right{margin-left:6px}.leaflet-tooltip-left:before,.leaflet-tooltip-right:before{top:50%;margin-top:-6px}.leaflet-tooltip-left:before{right:0;margin-right:-12px;border-left-color:#fff}.leaflet-tooltip-right:before{left:0;margin-left:-12px;border-right-color:#fff}
+@media print{[data-filter]{display:inline-block!important;border:0;padding:0}}button.card{text-align:left}nav{flex-wrap:wrap}.panel p{overflow-wrap:anywhere}.article-preview{margin-top:18px;background:#f4f9fa;border-left:4px solid var(--teal)}.article-preview h2{font-size:1rem;color:#34586b}.article-preview h3{margin:6px 0}.article-preview p{margin:8px 0}.date-section{margin-top:1em;padding-top:1em;border-top:1px solid #cedce1}.date-section .controls{margin:.6em 0}.date-section h2{margin:0}.date-section p{margin:.45em 0 .8em}#downloadStatus{margin:1em 0;padding:1em;border-left:4px solid var(--teal);background:#edf6f5}#downloadBar{display:block;width:min(100%,42rem);height:1rem;accent-color:var(--teal);margin:.65rem 0}#ranges [hidden]{display:none!important}#stopJob{background:#af1423;color:white;border:2px solid #85111b;font-size:1.12rem;font-weight:750;padding:.8rem 1.6rem;margin:.5rem 0}#stopJob:disabled{opacity:.75}#volumeDialog{max-width:min(30rem,90vw);border:1px solid #abbfc8;border-radius:.6rem;padding:1.4rem}#volumeDialog::backdrop{background:#10273888}</style><style>.leaflet-pane,.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-tile-container,.leaflet-pane>svg,.leaflet-pane>canvas,.leaflet-zoom-box,.leaflet-image-layer,.leaflet-layer{position:absolute;left:0;top:0}.leaflet-container{overflow:hidden}.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow{-webkit-user-select:none;-moz-user-select:none;user-select:none;-webkit-user-drag:none}.leaflet-tile::selection{background:transparent}.leaflet-safari .leaflet-tile{image-rendering:-webkit-optimize-contrast}.leaflet-safari .leaflet-tile-container{width:1600px;height:1600px;-webkit-transform-origin:0 0}.leaflet-marker-icon,.leaflet-marker-shadow{display:block}.leaflet-container .leaflet-overlay-pane svg,.leaflet-container .leaflet-marker-pane img,.leaflet-container .leaflet-shadow-pane img,.leaflet-container .leaflet-tile-pane img,.leaflet-container img.leaflet-image-layer,.leaflet-container .leaflet-tile{max-width:none !important;max-height:none !important}.leaflet-container.leaflet-touch-zoom{-ms-touch-action:pan-x pan-y;touch-action:pan-x pan-y}.leaflet-container.leaflet-touch-drag{-ms-touch-action:pinch-zoom;touch-action:none;touch-action:pinch-zoom}.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom{-ms-touch-action:none;touch-action:none}.leaflet-container{-webkit-tap-highlight-color:transparent}.leaflet-container a{-webkit-tap-highlight-color:rgba(51,181,229,0.4)}.leaflet-tile{filter:inherit;visibility:hidden}.leaflet-tile-loaded{visibility:inherit}.leaflet-zoom-box{width:0;height:0;-moz-box-sizing:border-box;box-sizing:border-box;z-index:800}.leaflet-overlay-pane svg{-moz-user-select:none}.leaflet-pane{z-index:400}.leaflet-tile-pane{z-index:200}.leaflet-overlay-pane{z-index:400}.leaflet-shadow-pane{z-index:500}.leaflet-marker-pane{z-index:600}.leaflet-tooltip-pane{z-index:650}.leaflet-popup-pane{z-index:700}.leaflet-map-pane canvas{z-index:100}.leaflet-map-pane svg{z-index:200}.leaflet-vml-shape{width:1px;height:1px}.lvml{behavior:url(#default#VML);display:inline-block;position:absolute}.leaflet-control{position:relative;z-index:800;pointer-events:visiblePainted;pointer-events:auto}.leaflet-top,.leaflet-bottom{position:absolute;z-index:1000;pointer-events:none}.leaflet-top{top:0}.leaflet-right{right:0}.leaflet-bottom{bottom:0}.leaflet-left{left:0}.leaflet-control{float:left;clear:both}.leaflet-right .leaflet-control{float:right}.leaflet-top .leaflet-control{margin-top:10px}.leaflet-bottom .leaflet-control{margin-bottom:10px}.leaflet-left .leaflet-control{margin-left:10px}.leaflet-right .leaflet-control{margin-right:10px}.leaflet-fade-anim .leaflet-tile{will-change:opacity}.leaflet-fade-anim .leaflet-popup{opacity:0;-webkit-transition:opacity 0.2s linear;-moz-transition:opacity 0.2s linear;transition:opacity 0.2s linear}.leaflet-fade-anim .leaflet-map-pane .leaflet-popup{opacity:1}.leaflet-zoom-animated{-webkit-transform-origin:0 0;-ms-transform-origin:0 0;transform-origin:0 0}.leaflet-zoom-anim .leaflet-zoom-animated{will-change:transform}.leaflet-zoom-anim .leaflet-zoom-animated{-webkit-transition:-webkit-transform 0.25s cubic-bezier(0, 0, 0.25, 1);-moz-transition:-moz-transform 0.25s cubic-bezier(0, 0, 0.25, 1);transition:transform 0.25s cubic-bezier(0, 0, 0.25, 1)}.leaflet-zoom-anim .leaflet-tile,.leaflet-pan-anim .leaflet-tile{-webkit-transition:none;-moz-transition:none;transition:none}.leaflet-zoom-anim .leaflet-zoom-hide{visibility:hidden}.leaflet-interactive{cursor:pointer}.leaflet-grab{cursor:-webkit-grab;cursor:-moz-grab;cursor:grab}.leaflet-crosshair,.leaflet-crosshair .leaflet-interactive{cursor:crosshair}.leaflet-popup-pane,.leaflet-control{cursor:auto}.leaflet-dragging .leaflet-grab,.leaflet-dragging .leaflet-grab .leaflet-interactive,.leaflet-dragging .leaflet-marker-draggable{cursor:move;cursor:-webkit-grabbing;cursor:-moz-grabbing;cursor:grabbing}.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-image-layer,.leaflet-pane>svg path,.leaflet-tile-container{pointer-events:none}.leaflet-marker-icon.leaflet-interactive,.leaflet-image-layer.leaflet-interactive,.leaflet-pane>svg path.leaflet-interactive,svg.leaflet-image-layer.leaflet-interactive path{pointer-events:visiblePainted;pointer-events:auto}.leaflet-container{background:#ddd;outline:0}.leaflet-container a{color:#0078A8}.leaflet-container a.leaflet-active{outline:2px solid orange}.leaflet-zoom-box{border:2px dotted #38f;background:rgba(255,255,255,0.5)}.leaflet-container{font:12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif}.leaflet-bar{box-shadow:0 1px 5px rgba(0,0,0,0.65);border-radius:4px}.leaflet-bar a,.leaflet-bar a:hover{background-color:#fff;border-bottom:1px solid #ccc;width:26px;height:26px;line-height:26px;display:block;text-align:center;text-decoration:none;color:black}.leaflet-bar a,.leaflet-control-layers-toggle{background-position:50% 50%;background-repeat:no-repeat;display:block}.leaflet-bar a:hover{background-color:#f4f4f4}.leaflet-bar a:first-child{border-top-left-radius:4px;border-top-right-radius:4px}.leaflet-bar a:last-child{border-bottom-left-radius:4px;border-bottom-right-radius:4px;border-bottom:none}.leaflet-bar a.leaflet-disabled{cursor:default;background-color:#f4f4f4;color:#bbb}.leaflet-touch .leaflet-bar a{width:30px;height:30px;line-height:30px}.leaflet-touch .leaflet-bar a:first-child{border-top-left-radius:2px;border-top-right-radius:2px}.leaflet-touch .leaflet-bar a:last-child{border-bottom-left-radius:2px;border-bottom-right-radius:2px}.leaflet-control-zoom-in,.leaflet-control-zoom-out{font:bold 18px 'Lucida Console', Monaco, monospace;text-indent:1px}.leaflet-touch .leaflet-control-zoom-in,.leaflet-touch .leaflet-control-zoom-out{font-size:22px}.leaflet-control-layers{box-shadow:0 1px 5px rgba(0,0,0,0.4);background:#fff;border-radius:5px}.leaflet-control-layers-toggle{background-image:url(images/layers.png);width:36px;height:36px}.leaflet-retina .leaflet-control-layers-toggle{background-image:url(images/layers-2x.png);background-size:26px 26px}.leaflet-touch .leaflet-control-layers-toggle{width:44px;height:44px}.leaflet-control-layers .leaflet-control-layers-list,.leaflet-control-layers-expanded .leaflet-control-layers-toggle{display:none}.leaflet-control-layers-expanded .leaflet-control-layers-list{display:block;position:relative}.leaflet-control-layers-expanded{padding:6px 10px 6px 6px;color:#333;background:#fff}.leaflet-control-layers-scrollbar{overflow-y:scroll;overflow-x:hidden;padding-right:5px}.leaflet-control-layers-selector{margin-top:2px;position:relative;top:1px}.leaflet-control-layers label{display:block}.leaflet-control-layers-separator{height:0;border-top:1px solid #ddd;margin:5px -10px 5px -6px}.leaflet-default-icon-path{background-image:url(images/marker-icon.png)}.leaflet-container .leaflet-control-attribution{background:#fff;background:rgba(255,255,255,0.7);margin:0}.leaflet-control-attribution,.leaflet-control-scale-line{padding:0 5px;color:#333}.leaflet-control-attribution a{text-decoration:none}.leaflet-control-attribution a:hover{text-decoration:underline}.leaflet-container .leaflet-control-attribution,.leaflet-container .leaflet-control-scale{font-size:11px}.leaflet-left .leaflet-control-scale{margin-left:5px}.leaflet-bottom .leaflet-control-scale{margin-bottom:5px}.leaflet-control-scale-line{border:2px solid #777;border-top:none;line-height:1.1;padding:2px 5px 1px;font-size:11px;white-space:nowrap;overflow:hidden;-moz-box-sizing:border-box;box-sizing:border-box;background:#fff;background:rgba(255,255,255,0.5)}.leaflet-control-scale-line:not(:first-child){border-top:2px solid #777;border-bottom:none;margin-top:-2px}.leaflet-control-scale-line:not(:first-child):not(:last-child){border-bottom:2px solid #777}.leaflet-touch .leaflet-control-attribution,.leaflet-touch .leaflet-control-layers,.leaflet-touch .leaflet-bar{box-shadow:none}.leaflet-touch .leaflet-control-layers,.leaflet-touch .leaflet-bar{border:2px solid rgba(0,0,0,0.2);background-clip:padding-box}.leaflet-popup{position:absolute;text-align:center;margin-bottom:20px}.leaflet-popup-content-wrapper{padding:1px;text-align:left;border-radius:12px}.leaflet-popup-content{margin:13px 19px;line-height:1.4}.leaflet-popup-content p{margin:18px 0}.leaflet-popup-tip-container{width:40px;height:20px;position:absolute;left:50%;margin-left:-20px;overflow:hidden;pointer-events:none}.leaflet-popup-tip{width:17px;height:17px;padding:1px;margin:-10px auto 0;-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg)}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:white;color:#333;box-shadow:0 3px 14px rgba(0,0,0,0.4)}.leaflet-container a.leaflet-popup-close-button{position:absolute;top:0;right:0;padding:4px 4px 0 0;border:none;text-align:center;width:18px;height:14px;font:16px/14px Tahoma, Verdana, sans-serif;color:#c3c3c3;text-decoration:none;font-weight:bold;background:transparent}.leaflet-container a.leaflet-popup-close-button:hover{color:#999}.leaflet-popup-scrolled{overflow:auto;border-bottom:1px solid #ddd;border-top:1px solid #ddd}.leaflet-oldie .leaflet-popup-content-wrapper{-ms-zoom:1}.leaflet-oldie .leaflet-popup-tip{width:24px;margin:0 auto;-ms-filter:"progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)";filter:progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)}.leaflet-oldie .leaflet-popup-tip-container{margin-top:-1px}.leaflet-oldie .leaflet-control-zoom,.leaflet-oldie .leaflet-control-layers,.leaflet-oldie .leaflet-popup-content-wrapper,.leaflet-oldie .leaflet-popup-tip{border:1px solid #999}.leaflet-div-icon{background:#fff;border:1px solid #666}.leaflet-tooltip{position:absolute;padding:6px;background-color:#fff;border:1px solid #fff;border-radius:3px;color:#222;white-space:nowrap;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,0.4)}.leaflet-tooltip.leaflet-clickable{cursor:pointer;pointer-events:auto}.leaflet-tooltip-top:before,.leaflet-tooltip-bottom:before,.leaflet-tooltip-left:before,.leaflet-tooltip-right:before{position:absolute;pointer-events:none;border:6px solid transparent;background:transparent;content:""}.leaflet-tooltip-bottom{margin-top:6px}.leaflet-tooltip-top{margin-top:-6px}.leaflet-tooltip-bottom:before,.leaflet-tooltip-top:before{left:50%;margin-left:-6px}.leaflet-tooltip-top:before{bottom:0;margin-bottom:-12px;border-top-color:#fff}.leaflet-tooltip-bottom:before{top:0;margin-top:-12px;margin-left:-6px;border-bottom-color:#fff}.leaflet-tooltip-left{margin-left:-6px}.leaflet-tooltip-right{margin-left:6px}.leaflet-tooltip-left:before,.leaflet-tooltip-right:before{top:50%;margin-top:-6px}.leaflet-tooltip-left:before{right:0;margin-right:-12px;border-left-color:#fff}.leaflet-tooltip-right:before{left:0;margin-left:-12px;border-right-color:#fff}
 
 
 #atlas{height:clamp(360px,61vh,700px);background:#d8e9ee;border:1px solid #a5bbc4;border-radius:9px;z-index:0} #placeList{scroll-margin:15px}</style>
@@ -344,6 +344,7 @@ panel.innerHTML=`<h2 id="rangesTitle">Date ranges</h2>
 <p><strong>90 days maximum per download.</strong> Choose completed UTC days from February 19, 2015 onward. Both dates are included.</p>
 <div class="controls"><label>Download from<input id="downloadStart" type="date" required></label><label>Download through<input id="downloadEnd" type="date" required></label></div>
 <label>Records to collect<select id="collectionMode"><option value="sample" selected>Quick sample (up to 12 records per day)</option><option value="all">All available event records</option></select></label><p id="rangeScope" aria-live="polite"></p><button id="rangeFetch" class="primary">Download records</button>
+<button id="stopJob" type="button" hidden>STOP JOB</button><dialog id="volumeDialog" aria-labelledby="volumeTitle"><h2 id="volumeTitle">Review download size</h2><p id="volumeDates"></p><p id="volumeSize" aria-live="polite"></p><div class="toolbar"><button id="reviseDates" autofocus>Change dates or sample</button><button id="confirmDownload" class="primary">Start collection</button></div></dialog>
 <div id="downloadStatus" hidden><strong id="rangeState" role="status"></strong><progress id="downloadBar" aria-label="Collection progress"></progress><p id="downloadDetail"></p><button hidden id="useRange" class="primary">View downloaded records</button></div></section>
 <section class="date-section"><h2>Filter the records on screen</h2><p id="filterScope"></p>
 <div class="controls"><label>Archive date from<input id="rangeStart" type="date" required></label><label>Archive date through<input id="rangeEnd" type="date" required></label><label>Event date from (optional)<input id="eventStart" type="date"></label><label>Event date through (optional)<input id="eventEnd" type="date"></label></div>
@@ -381,11 +382,12 @@ function syncDownloadDates(){
 function estimate(){
  const {days,message}=downloadDates();
  $('#rangeScope').textContent=message||($('#collectionMode').value==='sample'?days+' daily archive slots · up to '+(12*days).toLocaleString()+' event records for review.':(days*96).toLocaleString()+' quarter-hour archive slots · all event rows, with no record limit. Shorten the dates or choose Quick sample for a smaller collection.');
- $('#rangeFetch').disabled=downloading||Boolean(message);
+ $('#rangeFetch').disabled=downloading||checkingSize||Boolean(message);
  const selected=downloadDates();
  $('#filterScope').textContent=(selected.message?'':'Selected download: '+selected.start+' through '+selected.end+' UTC. ')+
   (loaded.full?'Filtering the open archive: '+slotLabel(loaded.batches[0].stamp)+' UTC.':'Filters apply to the currently loaded records: '+loaded.start+' through '+lastDay(loaded)+' UTC.');
  $('#rangeRestore').hidden=loaded===sourceSnapshot&&!rangeSelection;
+ $('#rangeRestore').disabled=downloading;
  for(const id of ['rangeStart','rangeEnd']){$('#'+id).min='2015-02-19';$('#'+id).max=yesterday}
 }
 function viewRange(source,start,end,ef,et){
@@ -431,7 +433,7 @@ async function api(path,options){
  let response;
  try{response=await fetch(base+'/api/'+path,{...options,cache:'no-store'})}catch{throw Error('Collector could not be reached. Retry the request.')}
  if(!response.headers.get('content-type')?.includes('application/json'))throw Error('The archive collector is unavailable on this host. Loaded-record filtering still works.');
- const data=await response.json();if(!response.ok)throw Error(data.error||'Archive request failed.');return data;
+ const data=await response.json();if(!response.ok){const error=Error(data.error||'Archive request failed.');error.status=response.status;throw error}return data;
 }
 async function collectNew(){
  const {start,end,days,message}=downloadDates();
@@ -441,10 +443,13 @@ async function collectNew(){
  setProgress('Connecting to GDELT collector…',start+' through '+end+' UTC',null);
  try{
   const job=await api('jobs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({start,end})});
+  ownJob('jobs',job);
   let delivered=false;
   while(epoch===requestEpoch){
    const status=await api('jobs/'+job.id);if(epoch!==requestEpoch)return;
-   if(status.state==='failed')throw Error(status.error);
+   if(stoppedStatus(status.state))return;
+   if(status.state==='stopping'){await new Promise(resolve=>setTimeout(resolve,1000));continue}
+   if(status.state==='failed'){saveHandle(null);throw Error(status.error)}
    if(status.state==='ready'&&!delivered){
     setProgress('Loading downloaded records…',status.total+' of '+status.total+' archive days processed.',status.total,status.total);
     const data=await api('jobs/'+job.id+'/result');if(epoch!==requestEpoch)return;
@@ -459,13 +464,14 @@ async function collectNew(){
     const details=count.toLocaleString()+' records · '+start+' through '+end+' UTC.'+(gaps?' Archive gaps on '+gaps+' day(s).':'')+
       (status.metadata==='collecting'?' Article previews are still loading.':'');
     setProgress(loaded===pendingSample?'Screening complete · Ready to analyze':'Download complete · Save your review, then view downloaded records',details,days,days);
-    downloading=false;estimate();
+    downloading=Boolean(stopHandle)&&status.metadata==='collecting';estimate();
    }else if(status.state==='queued'){
     setProgress('Queued for download',start+' through '+end+' UTC · Waiting for the collector.',null);
    }else{
     setProgress('Downloading archive records…',status.done+' of '+status.total+' archive days processed · '+Math.floor(100*status.done/status.total)+'%',status.done,status.total);
    }
    if(delivered&&status.metadata==='complete'){
+    saveHandle(null);
     const previews=await api('jobs/'+job.id+'/previews');if(epoch!==requestEpoch)return;
     Object.assign(pendingSample.previews,previews);
     if(loaded===pendingSample&&tab===paths[1]&&selected&&byid.has(selected)){
@@ -473,14 +479,110 @@ async function collectNew(){
     }
     return;
    }
-   if(delivered&&status.metadata==='unavailable')return;
+   if(delivered&&status.metadata==='unavailable'){saveHandle(null);return}
    await new Promise(resolve=>setTimeout(resolve,delivered?5000:2000));
   }
  }catch(e){if(epoch===requestEpoch){
   if(pendingSample)setProgress(loaded===pendingSample?'Screening complete · Ready to analyze':'Download complete · View downloaded records when ready','Article preview update interrupted. '+e.message,days,days);
   else setProgress('Download failed',e.message+' Choose Download records to retry.');
- }}finally{if(epoch===requestEpoch){downloading=false;estimate()}}
+ }}finally{if(epoch===requestEpoch){downloading=false;estimate();if(stopHandle)recoverStop()}}
 }
+let stopHandle=null, checkingSize=false;
+function saveHandle(handle){
+ stopHandle=handle;
+ try{
+  if(handle)sessionStorage.setItem('gdelt-active-job',JSON.stringify(handle));
+  else sessionStorage.removeItem('gdelt-active-job');
+ }catch{}
+ $('#stopJob').hidden=!handle;
+ $('#stopJob').disabled=false;
+ $('#stopJob').textContent='STOP JOB';
+}
+function ownJob(kind,job){
+ if(job.stopToken)saveHandle({path:kind+'/'+job.id,token:job.stopToken});
+}
+function stoppedStatus(state){
+ if(state==='stopping'){
+  setProgress('Stopping collection…','Waiting for archive requests already in progress to finish.',null);
+  return false;
+ }
+ if(state==='stopped'){
+  setProgress('Job stopped','The collector has stopped processing this request.');
+  saveHandle(null);
+ }
+ return state==='stopped';
+}
+async function requestStop(){
+ const handle=stopHandle;
+ if(!handle)return;
+ $('#stopJob').disabled=true;
+ try{
+  const result=await api(handle.path+'/stop',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:handle.token})});
+  if(stopHandle!==handle)return;
+  if(result.state==='stopping')$('#stopJob').textContent='STOPPING…';
+  stoppedStatus(result.state);
+ }catch(e){
+  if(stopHandle===handle){$('#stopJob').disabled=false;tell('Stop request could not be confirmed. '+e.message+' Try STOP JOB again.')}
+ }
+}
+async function recoverStop(){
+ let handle;
+ try{handle=JSON.parse(sessionStorage.getItem('gdelt-active-job'))}catch{}
+ if(!handle||!/^((jobs)|(ranges))\/\d{4}-\d\d-\d\d_\d{4}-\d\d-\d\d$/.test(handle.path)||!handle.token)return;
+ saveHandle(handle);downloading=true;estimate();
+ while(stopHandle===handle){
+  try{
+   const s=await api(handle.path);
+   if(s.state==='stopped'){stoppedStatus(s.state);break}
+   if(s.state==='failed'||(s.state==='ready'&&s.metadata!=='collecting')){
+    setProgress(s.state==='failed'?'Collection failed':'Collection complete',s.error||'Select the same range to view the results.');
+    break;
+   }
+   setProgress(s.state==='stopping'?'Stopping collection…':'Existing collection in progress',s.done+' / '+s.total+' processed.',s.done,s.total);
+  }catch(e){
+   if(e.status===404){setProgress('Job is no longer active','The collector has no active request at this address.');break}
+   tell('Could not check the job. Retrying…');
+  }
+  await new Promise(resolve=>setTimeout(resolve,3000));
+ }
+ if(stopHandle===handle)saveHandle(null);
+ downloading=false;estimate();
+}
+function volumeText(days,mode,info){
+ const slots=days*96;
+ let size;
+ if(Number.isSafeInteger(info.exact))size=info.exact.toLocaleString()+' event rows in the completed full-range collection.';
+ else{
+  const reference=sourceSnapshot.batches.filter(b=>!b.events.error&&Number.isFinite(b.events.rows));
+  const fromRange=info.processed>0&&info.rows>0;
+  const average=fromRange?info.rows/info.processed:reference.reduce((sum,b)=>sum+b.events.rows,0)/reference.length;
+  size=Number.isFinite(average)?'Estimated full range: about '+(Math.round(average*slots/1000)*1000).toLocaleString()+' event rows. Based on '+(fromRange?'processed slots in this date range.':'event exports in the bundled snapshot.'):'Exact event count is unavailable before collection.';
+ }
+ return size+' '+(mode==='sample'?'Quick sample will keep up to '+(days*12).toLocaleString()+' records from '+days+' daily slots.':'Full collection will request all '+slots.toLocaleString()+' archive slots.');
+}
+async function previewDownload(){
+ const dates=downloadDates(),mode=$('#collectionMode').value;
+ if(dates.message||downloading||checkingSize)return;
+ const dialog=$('#volumeDialog');
+ checkingSize=true;estimate();
+ $('#volumeDates').textContent=dates.start+' through '+dates.end+' UTC';
+ $('#volumeSize').textContent=volumeText(dates.days,mode,{});
+ dialog.showModal();
+ const review={};currentReview=review;
+ try{
+  const info=await api('estimate?start='+dates.start+'&end='+dates.end,{signal:AbortSignal.timeout(4000)});
+  if(currentReview===review&&dialog.open)$('#volumeSize').textContent=volumeText(dates.days,mode,info);
+ }catch{/* The snapshot estimate works without a collector connection. */}
+}
+let currentReview=null;
+$('#volumeDialog').onclose=()=>{currentReview=null;checkingSize=false;estimate()};
+$('#reviseDates').onclick=()=>$('#volumeDialog').close();
+$('#confirmDownload').onclick=()=>{
+ $('#volumeDialog').close();
+ if($('#collectionMode').value==='sample')collectNew();else collectFull();
+};
+$('#stopJob').onclick=requestStop;
+
 const yesterday=isoDay(Date.now()-86400000);
  for(const id of ['downloadStart','downloadEnd']){$('#'+id).min='2015-02-19';$('#'+id).max=yesterday}
  $('#downloadEnd').value=yesterday;$('#downloadStart').value=isoDay(Date.parse(yesterday)-89*86400000);
@@ -532,12 +634,16 @@ async function collectFull(){
  try{
   const base=await collectorBase();
   const job=await api('ranges',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({start,end})});
+  ownJob('ranges',job);
   while(epoch===requestEpoch){
    const status=await api('ranges/'+job.id);
    if(epoch!==requestEpoch)return;
-   if(status.state==='failed')throw Error(status.error);
+   if(stoppedStatus(status.state))return;
+   if(status.state==='stopping'){await new Promise(resolve=>setTimeout(resolve,1000));continue}
+   if(status.state==='failed'){saveHandle(null);throw Error(status.error)}
    const detail=status.done.toLocaleString()+' / '+status.total.toLocaleString()+' archive slots · '+status.rows.toLocaleString()+' event records';
    if(status.state==='ready'){
+    saveHandle(null);
     const slots=await api('ranges/'+job.id+'/manifest');
     if(epoch!==requestEpoch)return;
     const box=$('#fullResults');
@@ -555,13 +661,15 @@ async function collectFull(){
    await new Promise(resolve=>setTimeout(resolve,3000));
   }
  }catch(e){if(epoch===requestEpoch)setProgress('Collection interrupted',e.message+' Submit the same dates to resume.')}
- finally{if(epoch===requestEpoch){downloading=false;estimate()}}
+ finally{if(epoch===requestEpoch){downloading=false;estimate();if(stopHandle)recoverStop()}}
 }
 
 $('#collectionMode').onchange=estimate;
-$('#rangeFetch').onclick=()=>$('#collectionMode').value==='sample'?collectNew():collectFull();
+$('#rangeFetch').onclick=previewDownload;
+recoverStop();
 $('#useRange').onclick=()=>{if(pendingSample&&switchSample(pendingSample)){$('#useRange').hidden=true;$('#rangeState').textContent='Screening complete · Ready to analyze'}};
 
 show();
 </script></html>
+
 

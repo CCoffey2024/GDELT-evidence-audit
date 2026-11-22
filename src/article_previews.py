@@ -74,7 +74,7 @@ def archived_headlines(batch):
     return found
 
 
-def enrich(batches):
+def enrich(batches, cancelled=lambda: False):
     jobs = []
     for b in batches:
         urls = {x['raw'][60] for x in b['sample'] if x['raw'][60]}
@@ -86,10 +86,11 @@ def enrich(batches):
             jobs.append((minute.strftime('%Y%m%d%H%M%S'), urls))
     previews = {}
     with concurrent.futures.ThreadPoolExecutor(max_workers=12) as pool:
-        for result in pool.map(archived_headlines, batches):
+        for result in pool.map(lambda b: {} if cancelled() else archived_headlines(b), batches):
             previews.update(result)
-        for result in pool.map(lambda pair: read_minute(*pair), jobs):
+        for result in pool.map(lambda pair: {} if cancelled() else read_minute(*pair), jobs):
             for url, preview in result.items():
                 if url not in previews or (preview['description'] and not previews[url]['description']):
                     previews[url] = preview
     return previews
+

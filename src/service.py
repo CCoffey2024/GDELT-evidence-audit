@@ -2,6 +2,7 @@
 import datetime as dt
 import json
 import os
+import secrets
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -51,18 +52,39 @@ def daily(day):
 
 def update(job, **values):
     with lock:
+        if job.get("cancelled"):
+            return
         job.update(values)
+
+
+def mark_stopped(job):
+    with lock:
+        job.update(state="stopped", finished=time.monotonic())
+
+
+def run_collection(job, operation, *args):
+    try:
+        operation(job, *args)
+    finally:
+        with lock:
+            if job.get("cancelled") and not job.get("preview_assigned"):
+                mark_stopped(job)
+
 
 
 def add_previews(job, batches):
     try:
-        previews = enrich(batches)
+        previews = enrich(batches, lambda: job.get("cancelled", False))
         update(job, previews=previews, metadata="complete")
     except Exception:
         app.logger.exception("Metadata collection failed")
         update(job, metadata="unavailable")
     finally:
-        update(job, finished=time.monotonic())
+        with lock:
+            if job.get("cancelled"):
+                mark_stopped(job)
+            else:
+                update(job, finished=time.monotonic())
 
 
 def collect_range(job, first, last):
@@ -71,7 +93,9 @@ def collect_range(job, first, last):
         days = [first + i*DAY for i in range(job["total"])]
         batches = []
         with ThreadPoolExecutor(max_workers=3) as pool:
-            for batch in pool.map(daily, days):
+            for batch in pool.map(lambda day: None if job.get("cancelled") else daily(day), days):
+                if job.get("cancelled"):
+                    return
                 batches.append(batch)
                 update(job, done=len(batches))
         if all("error" in b["events"] for b in batches):
@@ -80,8 +104,12 @@ def collect_range(job, first, last):
             return
         result = dict(start=str(first), end=str(last+DAY), seed=SEED, batches=batches,
                       collected=dt.datetime.now(dt.timezone.utc).isoformat())
-        update(job, result=result, state="ready", metadata="collecting")
-        preview_worker.submit(add_previews, job, batches)
+        with lock:
+            if job.get("cancelled"):
+                return
+            update(job, result=result, state="ready", metadata="collecting")
+            job["preview_assigned"] = True
+            job["future"] = preview_worker.submit(add_previews, job, batches)
         # Bound cache growth on ephemeral and mounted storage alike.
         files = sorted(CACHE.glob("*.json"), key=lambda p: p.stat().st_mtime)
         for path in files[:-1500]:
@@ -130,7 +158,7 @@ def submit():
             ttl = 60 if j["state"]=="failed" or any("error" in b[s] for b in j.get("result",{}).get("batches",[]) for s in ("events","mentions")) else 3600
             if j.get("finished", float("inf")) + ttl < time.monotonic():
                 del jobs[k]
-        if key not in jobs:
+        if key not in jobs or jobs[key]["state"] == "stopped":
             if sum("finished" not in j for j in jobs.values()) >= 4:
                 return jsonify(error="Queue is full. Retry after a current job finishes."), 429
             if len(jobs)>=12:
@@ -138,7 +166,9 @@ def submit():
                 del jobs[oldest]
             j = dict(state="queued", done=0,total=(last-first).days+1,metadata="pending")
             jobs[key]=j
-            worker.submit(collect_range, j, first, last)
+            j["token"] = secrets.token_urlsafe(24)
+            j["future"] = worker.submit(run_collection, j, collect_range, first, last)
+            return jsonify(id=key, stopToken=j["token"]), 202
     return jsonify(id=key), 202
 
 
@@ -179,20 +209,22 @@ def submit_full():
     key = f"{first}_{last}"
     with lock:
         current = full_jobs.get(key)
-        if current and (current["state"] not in ("failed","ready") or
+        if current and (current["state"] not in ("failed","ready","stopped") or
                         (current["state"] == "ready" and not current.get("gaps"))):
             return jsonify(id=key), 202
-        if sum(j["state"] in ("queued","collecting","screening") for j in full_jobs.values()) >= 2:
+        if sum(j["state"] in ("queued","collecting","screening","stopping") for j in full_jobs.values()) >= 2:
             return jsonify(error="Two full ranges are already in progress. Retry shortly."), 429
         # Retain recent ranges; never evict an active collection.
         files = sorted(FULL_CACHE.glob("*.sqlite"), key=lambda p:p.stat().st_mtime, reverse=True)
         for old in files[2:]:
-            if old.stem != key and full_jobs.get(old.stem,{}).get("state") not in ("queued","collecting","screening"):
+            if old.stem != key and full_jobs.get(old.stem,{}).get("state") not in ("queued","collecting","screening","stopping"):
                 old.unlink(missing_ok=True)
                 full_jobs.pop(old.stem,None)
         job = dict(state="queued", done=0, total=((last-first).days+1)*96, rows=0)
         full_jobs[key] = job
-        worker.submit(collect_all, job, first, last, FULL_CACHE / (key+".sqlite"), update)
+        job["token"] = secrets.token_urlsafe(24)
+        job["future"] = worker.submit(run_collection, job, collect_all, first, last, FULL_CACHE / (key+".sqlite"), update)
+        return jsonify(id=key, stopToken=job["token"]), 202
     return jsonify(id=key), 202
 
 
@@ -204,7 +236,7 @@ def full_result(key, part=None):
         if job is None:
             return jsonify(error="Submit this range again to resume collection."), 404
         if part is None:
-            return jsonify({k:v for k,v in job.items() if k not in ("slots","finished")})
+            return jsonify({k:v for k,v in job.items() if k in ("state","done","total","rows","error","counts","gaps")})
         if job["state"] != "ready":
             return jsonify(error="Collection is in progress."), 409
         if part == "manifest":
@@ -246,3 +278,36 @@ def full_previews(key, stamp):
             del archive_previews[stamp]
             return jsonify(state="unavailable")
         return jsonify(state="complete", previews=future.result())
+
+
+@app.post("/api/<kind>/<key>/stop")
+def stop_collection(kind, key):
+    registry = {"jobs": jobs, "ranges": full_jobs}.get(kind)
+    data = request.get_json(silent=True) or {}
+    with lock:
+        job = registry.get(key) if registry is not None else None
+        if job is None:
+            abort(404)
+        token = data.get("token") if isinstance(data, dict) else None
+        if not isinstance(token, str) or not secrets.compare_digest(job["token"], token):
+            return jsonify(error="Only the browser that started this job can stop it."), 403
+        if "finished" not in job and (job["state"] != "ready" or job.get("metadata") == "collecting"):
+            job.update(cancelled=True,state="stopping")
+            if job["future"].cancel():
+                mark_stopped(job)
+        return jsonify(state=job["state"])
+
+
+@app.get("/api/estimate")
+def estimate_range():
+    try:
+        first, last = parse_dates(request.args.get("start"), request.args.get("end"))
+    except (TypeError, ValueError) as exc:
+        return jsonify(error=str(exc)), 400
+    with lock:
+        job = full_jobs.get(f"{first}_{last}", {})
+        if job.get("state") == "ready":
+            missing = sum(bool(gap & 1) for _, _, gap in job["slots"])
+            if not missing:
+                return jsonify(exact=job["rows"])
+        return jsonify(processed=job.get("done",0), rows=job.get("rows",0))

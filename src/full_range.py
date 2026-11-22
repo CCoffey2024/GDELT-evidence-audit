@@ -105,7 +105,11 @@ def collect_all(job, first, last, path, update):
             with ThreadPoolExecutor(max_workers=3) as pool:
                 from itertools import islice
                 while group := list(islice(pending, 3)):
+                    if job.get("cancelled"):
+                        return
                     for b in pool.map(full_batch, group):
+                        if job.get("cancelled"):
+                            return
                         stamp = b["stamp"]
                         items = b["sample"]
                         gap = int("error" in b["events"]) + 2 * int("error" in b["mentions"])
@@ -119,6 +123,9 @@ def collect_all(job, first, last, path, update):
                         done += 1
                         rows += len(items)
                         update(job, done=done, rows=rows)
+            if job.get("cancelled"):
+                return
+            db.set_progress_handler(lambda: int(bool(job.get("cancelled"))), 10000)
             update(job, state="screening")
             if not db.execute("SELECT 1 FROM slots WHERE gap IN (0,2) LIMIT 1").fetchone():
                 raise ValueError("No event export could be retrieved. Retry this range.")
@@ -154,3 +161,4 @@ def export_rows(path):
             for item in json.loads(zlib.decompress(payload))["sample"]:
                 writer.writerow([stamp, *item["raw"]])
             yield buffer.getvalue()
+
