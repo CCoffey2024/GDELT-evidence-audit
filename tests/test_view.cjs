@@ -38,3 +38,32 @@ const scopeTest=run(`(()=>{
  return !passes(a.id,'article') && outsideLinks(a.id).includes(peer.raw[0]);
 })()`);
 assert.equal(scopeTest,true);
+async function testDownloadUI(){
+ run("$('#downloadStart').value='2026-01-21';$('#downloadEnd').value='2026-11-20';estimate()");
+ assert.match(nodes['#rangeScope'].textContent,/304 days/);
+ assert.equal(nodes['#rangeFetch'].disabled,true);
+ run("$('#downloadStart').value='2026-08-21';$('#downloadEnd').value='2026-08-22';estimate()");
+ const progress=[];
+ document.querySelector('#downloadBar').removeAttribute=()=>{delete nodes['#downloadBar'].value};
+ context.setTimeout=(fn)=>{progress.push([nodes['#rangeState'].textContent,nodes['#downloadBar'].value]);fn()};
+ run(`let tick=0;api=async(path)=>{
+ if(path==='jobs')return {id:'test'};
+ if(path.endsWith('/result'))return viewRange(sourceSnapshot,'2026-08-21','2026-08-22','','');
+ if(path.endsWith('/previews'))return {};
+ return [{state:'queued',done:0,total:2},{state:'collecting',done:1,total:2},{state:'ready',done:2,total:2,metadata:'complete'}][tick++];
+ }`);
+ await run('collectNew()');
+ assert.deepEqual(progress,[['Queued for download',undefined],['Downloading archive records…',1]]);
+ assert.match(nodes['#downloadDetail'].textContent,/24 records/);
+ assert.match(nodes['#rangeState'].textContent,/Ready to analyze/);
+ assert.equal(nodes['#downloadBar'].value,2);
+ nodes['#useRange'].onclick();
+ assert.equal(run('records.length'),24);
+ assert.equal(nodes['#rangeState'].textContent,'Viewing downloaded records');
+ run("api=async()=>{throw Error('Temporary connection error')}");
+ await run('collectNew()');
+ assert.equal(nodes['#rangeState'].textContent,'Download failed');
+ assert.equal(nodes['#rangeFetch'].disabled,false);
+ console.log('Validated download limit, queued, in-progress, ready, open and retry states.');
+}
+testDownloadUI().catch(e=>{console.error(e);process.exitCode=1});
