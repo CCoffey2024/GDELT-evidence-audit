@@ -138,6 +138,11 @@ def dashboard():
     return send_from_directory(PUBLIC, "index.html")
 
 
+@app.get("/reports/<filename>")
+def research_report(filename):
+    return send_from_directory(PUBLIC / "reports", filename)
+
+
 @app.get("/api/health")
 def health():
     return jsonify(service="gdelt-range-v1")
